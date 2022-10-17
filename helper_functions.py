@@ -1,7 +1,9 @@
+from audioop import cross
 from stl import Mesh
 import numpy as np
 import trimesh
 import statistics as stats
+import math
 
 
 def mesh_to_vectors(mesh):
@@ -63,7 +65,7 @@ def trimCircle(mesh, radius):
             meshPointArr[i] = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])
     # Update the vertices of the mesh to the trimmed vertices
     mesh.points = np.array(meshPointArr)
-    return mesh
+    return mesh  # Returns stl.mesh object
 
 # Trim a circle around the centroid of the Trimesh mesh
 
@@ -84,7 +86,7 @@ def trimCircleT(mesh, radius):
 # Convert N-9 point to N-3 point
 
 
-def trimCircleGivenPoint(mesh, point, radius):
+def trimCircleGivenPoint(mesh, point, radius):  # Works with stl.mesh object
     meshPointArr = mesh.points.tolist()
     for i in range(len(meshPointArr)):  # Loop through the points
         if not withinBounds(meshPointArr[i], point, radius):
@@ -168,17 +170,21 @@ def plane():
                                   [0, 1, 0],
                                   [1, 1, 0]])
     data['vectors'] *= 100
-    return Mesh(data, remove_empty_areas=False)
+    ouput_mesh = Mesh(data, remove_empty_areas=False)
+    return trimesh.Trimesh(**trimesh.triangles.to_kwargs(ouput_mesh.vectors))
 
 
 def vectorToPlane(vector):
-    data = np.zeros(2, dtype=Mesh.dtype)
+    data = np.zeros(3, dtype=Mesh.dtype)
     # Plane
     data['vectors'][0] = np.array([[0, 0, 0],
                                    [1, 0, 0],
                                    [1, 1, 1]])
     data['vectors'][1] = np.array([[0, 0, 0],
                                    [0, 1, 0],
+                                   [1, 1, 1]])
+    data['vectors'][2] = np.array([[0, 0, 0],
+                                   [0, 0, 1],
                                    [1, 1, 1]])
     data['vectors'] *= vector
     data['vectors'] *= 50
@@ -197,3 +203,36 @@ def planeVector(mesh):
                   [np.cos(np.pi/2), -np.sin(np.pi/2), 0],
                   [np.sin(np.pi/2), np.cos(np.pi/2), 0]])
     return A @ nV
+
+
+def rotationMatrix(vector1, vector2):
+    cross = np.cross(vector1, vector2)
+    u = cross/np.linalg.norm(cross)  # Rotation Axis
+    # print("u = " + str(u))
+
+    dot = np.dot(vector1, vector2)
+    rotation_angle = math.atan2(np.linalg.norm(cross), dot)  # Rotation Angle
+    # print("rotation_angle = " + str(rotation_angle))
+
+    cos = np.cos(rotation_angle)
+    cos_1 = 1 - cos
+    sin = np.sin(rotation_angle)
+
+    R = np.array([[cos+(u[0]**2)*(cos_1), u[0]*u[1]*cos_1-u[2]*sin, u[0]*u[2]*cos_1+u[1]*sin, 0],
+                  [u[0]*u[1]*cos_1+u[2]*sin, cos +
+                      (u[1]**2)*(cos_1), u[1]*u[2]*cos_1-u[0]*sin, 0],
+                  [u[2]*u[0]*cos_1-u[1]*sin, u[2]*u[1]*cos_1 +
+                      u[0]*sin, cos+(u[2]**2)*(cos_1), 0],
+                  [0, 0, 0, 1]])
+
+    # R = np.array([[0, 0, 2, 0],
+    #              [1, 2, 0, 0],
+    #              [3, 4, 2, 0],
+    #              [0, 0, 0, 1]])
+    # angle, direction, point = trimesh.transformations.rotation_from_matrix(R)
+    # return trimesh.transformations.rotation_matrix(angle, direction, point)
+    return R
+
+
+def move(trimeshObj, distance_vector):
+    trimeshObj.vertices += distance_vector
