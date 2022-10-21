@@ -51,7 +51,7 @@ def withinBoundsT(point, centroid, radius):
     # Return boolean whether the distance is within the radius
     return np.linalg.norm(vector) < radius
 
-# Trim a circle around the centroid of the mesh
+# Trim a circle around the centroid of the numpy.stl mesh
 
 
 def trimCircle(mesh, radius):
@@ -67,10 +67,8 @@ def trimCircle(mesh, radius):
     mesh.points = np.array(meshPointArr)
     return mesh  # Returns stl.mesh object
 
-# Trim a circle around the centroid of the Trimesh mesh
 
-
-def trimCircleT(mesh, radius):
+def trimCircleT(mesh, radius):  # Trim a circle around the centroid of the Trimesh mesh
     # Convert numpy array to python standard array
     meshPointArr = mesh.vertices
     for i in range(len(meshPointArr)):  # Loop through the points
@@ -97,7 +95,7 @@ def trimCircleGivenPoint(mesh, point, radius):  # Works with stl.mesh object
     return mesh
 
 
-def pointsToPoint(points):
+def pointsToPoint(points):  # N-9 point to N-3 point array for numpy.stl mesh
     x = (points[0] + points[3] + points[6])/3
     y = (points[1] + points[4] + points[7])/3
     z = (points[2] + points[5] + points[8])/3
@@ -106,7 +104,7 @@ def pointsToPoint(points):
 # Convert a trianglular face into a one dimensional point
 
 
-def triangleToPoint(trianle):
+def triangleToPoint(trianle):  # For numpy.stl mesh
     x = trianle[0][0] + trianle[1][0] + trianle[2][0]
     y = trianle[0][1] + trianle[1][1] + trianle[2][1]
     z = trianle[0][2] + trianle[1][2] + trianle[2][2]
@@ -115,7 +113,7 @@ def triangleToPoint(trianle):
 # Input: unit vector array atribute of stl.Mesh object; Output: normal vector to the flat plane
 
 
-def unitVectorsToZplane(vectors):
+def unitVectorsToZplane(vectors):  # Finds the average normal vector
     # Initialize the empty array for z components of the unit normal vectors
     x_comp = []
     y_comp = []
@@ -138,20 +136,7 @@ def unitVectorsToZplane(vectors):
     return [x, y, z]
 
 
-# def lowest_point(mesh, plane):
-#     points = mesh.vertices
-#     min = points[0][plane]
-#     z_points = []
-
-#     # Add all the z components to the empty array
-#     for point in points:
-#         z_points.append(point[2])
-#         if point[2] < min:
-#             minPoint = point
-#             min = point
-#     return point
-
-def lowest_point(mesh, plane):
+def lowest_point(mesh, plane):  # Finds the lowest point in the mesh
     low = mesh.vertices[0]
     for m in mesh.vertices:
         if m[plane] < low[plane]:
@@ -160,7 +145,7 @@ def lowest_point(mesh, plane):
     return low
 
 
-def plane():
+def plane():  # Creates the x-y plane
     data = np.zeros(2, dtype=Mesh.dtype)
     # Plane
     data['vectors'][0] = np.array([[0, 1, 0],
@@ -174,7 +159,7 @@ def plane():
     return trimesh.Trimesh(**trimesh.triangles.to_kwargs(ouput_mesh.vectors))
 
 
-def vectorToPlane(vector):
+def vectorToPlane(vector):  # Create an arrow mesh pointing in the direction of the vector
     data = np.zeros(3, dtype=Mesh.dtype)
     # Plane
     data['vectors'][0] = np.array([[0, 0, 0],
@@ -205,7 +190,7 @@ def planeVector(mesh):
     return A @ nV
 
 
-def rotationMatrix(vector1, vector2):
+def rotationMatrix(vector1, vector2):  # Rotate from one vector basis to another
     cross = np.cross(vector1, vector2)
     u = cross/np.linalg.norm(cross)  # Rotation Axis
     # print("u = " + str(u))
@@ -234,5 +219,56 @@ def rotationMatrix(vector1, vector2):
     return R
 
 
+# Moves a Trimesh object along a direction vector in its coordinate space
 def move(trimeshObj, distance_vector):
     trimeshObj.vertices += distance_vector
+
+
+def zPoints(mesh):  # Input: trimeshObj
+    output = mesh.vertices
+    return output[:, 2]  # Output: Array of z coordinates
+
+
+def lowest_point_file(filename):  # Gets the lowest point of a mesh given the filename
+    your_mesh = Mesh.from_file(filename)
+    trimCircle(your_mesh, 250)
+    trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
+    low_point = lowest_point(trimmed, 2)
+    return low_point
+
+
+# Outputs the rotation matrix given a filename
+def rotation_matrix_file(filename):
+    your_mesh = Mesh.from_file(filename)
+    trimCircle(your_mesh, 250)
+    trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
+
+    # Rotate the mesh 90 degrees
+    trimmed.apply_transform(
+        trimesh.transformations.rotation_matrix(np.pi/2, [1, 0, 0]))
+    normalVec = unitVectorsToZplane(trimmed.face_normals)
+    return rotationMatrix(normalVec, np.array([0, 0, 1]))
+
+
+def histPlot(n, bins):
+    step = 10
+    nArr = []
+    binsArr = []
+    for i in range(n.size):
+        sum = np.sum(n[i:i+3])/3
+        nArr.append(sum)
+        binsArr.append(bins[i+1])
+    return (np.array(nArr), np.array(binsArr))
+
+
+def slicer(mesh):  # Input: Trimesh object
+    points = mesh.vertices
+    # Boolean array of the within the bounds of the y-z plane
+    mask1 = -2 < points[:, 0]
+    mask2 = 2 > points[:, 0]
+    mask = []
+    for i in range(len(points)):
+        mask.append(mask1[i] and mask2[i])
+    points = points[mask]  # Points within the bounds of the y-z plane
+    # Returns: y-coordinates and z-coordinates
+    return (points[:, 1], points[:, 2])
