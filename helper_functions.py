@@ -133,7 +133,8 @@ def unitVectorsToZplane(vectors):  # Finds the average normal vector
     y = stats.mean(y_comp)
     z = stats.mean(z_comp)
 
-    return [x, y, z]
+    vec = np.array([x, y, z])
+    return vec/np.linalg.norm(vec)
 
 
 def lowest_point(mesh, plane):  # Finds the lowest point in the mesh
@@ -233,6 +234,10 @@ def lowest_point_file(filename):  # Gets the lowest point of a mesh given the fi
     your_mesh = Mesh.from_file(filename)
     trimCircle(your_mesh, 250)
     trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
+    trimmed.apply_transform(trimesh.transformations.rotation_matrix(
+        np.pi/2, [1, 0, 0]))
+    trimmed.apply_transform(rotation_matrix_file(
+        'C:/Users/ishaa/Desktop/Research Work/Crater_STL_Files/02_09_2022_6Torr_test2.stl'))
     low_point = lowest_point(trimmed, 2)
     return low_point
 

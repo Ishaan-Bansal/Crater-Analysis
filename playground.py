@@ -9,7 +9,7 @@ import matplotlib.mlab as mlab
 import statistics as stats
 
 your_mesh = Mesh.from_file(
-    'C:/Users/ishaa/Desktop/Research Work/Crater_STL_Files/02_09_2022_6Torr_test2.stl')
+    'Crater_STL_Files/02_09_2022_6Torr_test2.stl')
 help.trimCircle(your_mesh, 250)
 trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
 
@@ -17,8 +17,9 @@ trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
 trimmed.apply_transform(
     trimesh.transformations.rotation_matrix(np.pi/2, [1, 0, 0]))
 
-normalVec = help.unitVectorsToZplane(trimmed.face_normals)
-# print(normalVec)
+normalVec = help.unitVectorsToZplane(trimmed.vertex_normals)
+print(help.unitVectorsToZplane(trimmed.vertex_normals) -
+      help.unitVectorsToZplane(trimmed.face_normals))
 
 # normalPLane = help.vectorToPlane(normalVec)
 # normalPLane.visual.face_colors = trimesh.visual.random_color()

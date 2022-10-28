@@ -19,6 +19,7 @@ import helper_functions as help
 your_mesh = Mesh.from_file(
     'C:/Users/ishaa/Desktop/Research Work/Crater_STL_Files/02_09_2022_6Torr_test2.stl')
 t = help.trimCircle(your_mesh, 250)
+t.remove_empty_areas(t)
 trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(t.vectors))
 
 sphere = trimesh.load_mesh(
