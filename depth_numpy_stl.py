@@ -65,5 +65,5 @@ vectors3 = your_mesh.normals
 
 normalVec = help.unitVectorsToZplane(vectors2)
 print(f"normalVec = {normalVec}")
-# slice = trimmed.section(plane_origin=trimmed.centroid, plane_normal=normalVec)
-# slice.show()
+slice = trimmed.section(plane_origin=trimmed.centroid, plane_normal=normalVec)
+slice.show()

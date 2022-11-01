@@ -62,24 +62,12 @@ def trimCircle(mesh, radius):
     for i in range(len(meshPointArr)):  # Loop through the points
         if not withinBounds(meshPointArr[i], meshObjTrimesh.centroid, radius):
             # If outside bounds then reassign the point to orgin
-            meshPointArr[i] = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])
+            meshPointArr[i] = np.array(
+                [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan])
     # Update the vertices of the mesh to the trimmed vertices
     mesh.points = np.array(meshPointArr)
     return mesh  # Returns stl.mesh object
 
-
-def trimCircleT(mesh, radius):  # Trim a circle around the centroid of the Trimesh mesh
-    # Convert numpy array to python standard array
-    meshPointArr = mesh.vertices
-    for i in range(len(meshPointArr)):  # Loop through the points
-        if not withinBoundsT(meshPointArr[i], mesh.centroid, radius):
-            # If outside bounds then reassign the point to orgin
-            meshPointArr[i] = trimesh.caching.tracked_array(
-                [0, 0, 0], dtype=None)
-    # Update the vertices of the mesh to the trimmed vertices
-    mesh.vertices = meshPointArr
-    # mesh.remove_infinite_values()``
-    return mesh
 
 # Convert N-9 point to N-3 point
 
@@ -89,7 +77,8 @@ def trimCircleGivenPoint(mesh, point, radius):  # Works with stl.mesh object
     for i in range(len(meshPointArr)):  # Loop through the points
         if not withinBounds(meshPointArr[i], point, radius):
             # If outside bounds then reassign the point to orgin
-            meshPointArr[i] = np.array([0, 0, 0, 0, 0, 0, 0, 0, 0])
+            meshPointArr[i] = np.array(
+                [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan])
     # Update the vertices of the mesh to the trimmed vertices
     mesh.points = np.array(meshPointArr)
     return mesh
@@ -129,18 +118,18 @@ def unitVectorsToZplane(vectors):  # Finds the average normal vector
     y_comp = np.array(y_comp)
     z_comp = np.array(z_comp)
 
-    x = stats.mean(x_comp)
     y = stats.mean(y_comp)
     z = stats.mean(z_comp)
+    x = stats.mean(x_comp)
 
     vec = np.array([x, y, z])
     return vec/np.linalg.norm(vec)
 
 
-def lowest_point(mesh, plane):  # Finds the lowest point in the mesh
+def lowest_point(mesh):  # Finds the lowest point in the mesh
     low = mesh.vertices[0]
     for m in mesh.vertices:
-        if m[plane] < low[plane]:
+        if m[2] < low[2]:
             low = m
             # m.visual.vertex_colors = trimesh.visual.random_color()
     return low
@@ -220,7 +209,29 @@ def rotationMatrix(vector1, vector2):  # Rotate from one vector basis to another
     return R
 
 
+def rotation_matrix_point(vector1,  vector2):
+    cross = np.cross(vector1, vector2)
+    u = cross/np.linalg.norm(cross)  # Rotation Axis
+    # print("u = " + str(u))
+
+    dot = np.dot(vector1, vector2)
+    rotation_angle = math.atan2(np.linalg.norm(cross), dot)  # Rotation Angle
+    # print("rotation_angle = " + str(rotation_angle))
+
+    cos = np.cos(rotation_angle)
+    cos_1 = 1 - cos
+    sin = np.sin(rotation_angle)
+
+    R = np.array([[cos+(u[0]**2)*(cos_1), u[0]*u[1]*cos_1-u[2]*sin, u[0]*u[2]*cos_1+u[1]*sin],
+                  [u[0]*u[1]*cos_1+u[2]*sin, cos +
+                      (u[1]**2)*(cos_1), u[1]*u[2]*cos_1-u[0]*sin],
+                  [u[2]*u[0]*cos_1-u[1]*sin, u[2]*u[1]*cos_1 +
+                      u[0]*sin, cos+(u[2]**2)*(cos_1)]])
+    return R
+
 # Moves a Trimesh object along a direction vector in its coordinate space
+
+
 def move(trimeshObj, distance_vector):
     trimeshObj.vertices += distance_vector
 
@@ -234,11 +245,10 @@ def lowest_point_file(filename):  # Gets the lowest point of a mesh given the fi
     your_mesh = Mesh.from_file(filename)
     trimCircle(your_mesh, 250)
     trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
-    trimmed.apply_transform(trimesh.transformations.rotation_matrix(
-        np.pi/2, [1, 0, 0]))
-    trimmed.apply_transform(rotation_matrix_file(
-        'C:/Users/ishaa/Desktop/Research Work/Crater_STL_Files/02_09_2022_6Torr_test2.stl'))
-    low_point = lowest_point(trimmed, 2)
+    # trimmed.apply_transform(trimesh.transformations.rotation_matrix(
+    #     np.pi/2, [1, 0, 0]))
+    trimmed.apply_transform(rotation_matrix_file(filename))
+    low_point = lowest_point(trimmed)
     return low_point
 
 
@@ -249,10 +259,22 @@ def rotation_matrix_file(filename):
     trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
 
     # Rotate the mesh 90 degrees
-    trimmed.apply_transform(
-        trimesh.transformations.rotation_matrix(np.pi/2, [1, 0, 0]))
+    # trimmed.apply_transform(
+    #     trimesh.transformations.rotation_matrix(np.pi/2, [1, 0, 0]))
     normalVec = unitVectorsToZplane(trimmed.face_normals)
     return rotationMatrix(normalVec, np.array([0, 0, 1]))
+
+
+def rotation_matrix__point_file(filename):
+    your_mesh = Mesh.from_file(filename)
+    trimCircle(your_mesh, 250)
+    trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
+
+    # Rotate the mesh 90 degrees
+    # trimmed.apply_transform(
+    #     trimesh.transformations.rotation_matrix(np.pi/2, [1, 0, 0]))
+    normalVec = unitVectorsToZplane(trimmed.face_normals)
+    return rotation_matrix_point(np.array([0, 0, 1]), normalVec)
 
 
 def histPlot(n, bins):

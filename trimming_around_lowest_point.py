@@ -6,15 +6,18 @@ import matplotlib.pyplot as plt
 import statistics as stats
 
 lowest_point = help.lowest_point_file(
-    r'Crater_STL_Files/02_09_2022_250Torr_test3.stl')
+    r'Crater_STL_Files/02_09_2022_6Torr_test2.stl')
+lowest_point = help.rotation_matrix__point_file(
+    r'Crater_STL_Files/02_09_2022_6Torr_test2.stl') @ lowest_point
 
 # Trim around the lowest_point
 new_mesh = Mesh.from_file(
     'C:/Users/ishaa/Desktop/Research Work/Crater_STL_Files/02_09_2022_6Torr_test2.stl')
 help.trimCircleGivenPoint(new_mesh, lowest_point, 200)
 mesh = trimesh.Trimesh(**trimesh.triangles.to_kwargs(new_mesh.vectors))
-mesh.apply_transform(
-    trimesh.transformations.rotation_matrix(np.pi/2, [1, 0, 0]))
+mesh.remove_infinite_values()
+# mesh.apply_transform(
+#     trimesh.transformations.rotation_matrix(np.pi/2, [1, 0, 0]))
 mesh.apply_transform(help.rotation_matrix_file(
     'C:/Users/ishaa/Desktop/Research Work/Crater_STL_Files/02_09_2022_6Torr_test2.stl'))
 
