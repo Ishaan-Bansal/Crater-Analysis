@@ -241,21 +241,22 @@ def zPoints(mesh):  # Input: trimeshObj
     return output[:, 2]  # Output: Array of z coordinates
 
 
-def lowest_point_file(filename):  # Gets the lowest point of a mesh given the filename
+# Gets the lowest point of a mesh given the filename
+def lowest_point_file(filename, radius):
     your_mesh = Mesh.from_file(filename)
-    trimCircle(your_mesh, 250)
+    trimCircle(your_mesh, radius)
     trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
     # trimmed.apply_transform(trimesh.transformations.rotation_matrix(
     #     np.pi/2, [1, 0, 0]))
-    trimmed.apply_transform(rotation_matrix_file(filename))
+    trimmed.apply_transform(rotation_matrix_file(filename, radius))
     low_point = lowest_point(trimmed)
     return low_point
 
 
 # Outputs the rotation matrix given a filename
-def rotation_matrix_file(filename):
+def rotation_matrix_file(filename, radius):
     your_mesh = Mesh.from_file(filename)
-    trimCircle(your_mesh, 250)
+    trimCircle(your_mesh, radius)
     trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
 
     # Rotate the mesh 90 degrees
@@ -265,9 +266,9 @@ def rotation_matrix_file(filename):
     return rotationMatrix(normalVec, np.array([0, 0, 1]))
 
 
-def rotation_matrix__point_file(filename):
+def rotation_matrix__point_file(filename, radius):
     your_mesh = Mesh.from_file(filename)
-    trimCircle(your_mesh, 250)
+    trimCircle(your_mesh, radius)
     trimmed = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
 
     # Rotate the mesh 90 degrees
