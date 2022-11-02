@@ -7,6 +7,7 @@ import statistics as stats
 
 filename = 'Crater_STL_Files/02_09_2022_6Torr_test2.stl'
 trimRadius = 250
+displayRadius = 250
 
 lowest_point = help.lowest_point_file(
     filename, trimRadius)
@@ -16,7 +17,7 @@ lowest_point = help.rotation_matrix__point_file(
 # Trim around the lowest_point
 new_mesh = Mesh.from_file(
     filename)
-help.trimCircleGivenPoint(new_mesh, lowest_point, trimRadius)
+help.trimCircleGivenPoint(new_mesh, lowest_point, displayRadius)
 mesh = trimesh.Trimesh(**trimesh.triangles.to_kwargs(new_mesh.vectors))
 mesh.remove_infinite_values()
 # mesh.apply_transform(
