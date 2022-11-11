@@ -9,10 +9,9 @@ filename = 'Crater_STL_Files/02_09_2022_6Torr_test2.stl'
 trimRadius = 250
 displayRadius = 250
 
-lowest_point = help.lowest_point_file(
+lowest_point, rotation_matrix, rotation_matrix_point = help.trimming_package(
     filename, trimRadius)
-lowest_point = help.rotation_matrix__point_file(
-    filename, trimRadius) @ lowest_point
+lowest_point = rotation_matrix_point @ lowest_point
 
 # Trim around the lowest_point
 new_mesh = Mesh.from_file(
@@ -22,8 +21,7 @@ mesh = trimesh.Trimesh(**trimesh.triangles.to_kwargs(new_mesh.vectors))
 mesh.remove_infinite_values()
 # mesh.apply_transform(
 #     trimesh.transformations.rotation_matrix(np.pi/2, [1, 0, 0]))
-mesh.apply_transform(help.rotation_matrix_file(
-    filename, trimRadius))
+mesh.apply_transform(rotation_matrix)
 
 mesh.show()
 
