@@ -1,6 +1,6 @@
 # CraterAnalysis (In Development)
 
-This purpose of this project is to provide meaningful analysis of craters. The primary requirement is interpretable .stl file. 
+The purpose of this project is to provide meaningful analysis of craters. The primary requirement is an interpretable .stl file. 
 
 The program will provide the depth, width (in production) and slices of the crater as well as a 3D togographical heat map of the crater. 
 
@@ -38,4 +38,4 @@ For the togographical heat map, run "togographic_map.py".
 
 ## Implementation
 
-These programs heavily use helper functions in order to analyse the crater. Read "helper_functions.py" as well as [numpy-stl documentation](https://numpy-stl.readthedocs.io/en/latest/) and [Trimesh documentation](https://trimsh.org/index.html) for in-depth understanding of the code.
+These programs use helper functions in order to analyse the crater. Read "helper_functions.py" as well as [numpy-stl documentation](https://numpy-stl.readthedocs.io/en/latest/) and [Trimesh documentation](https://trimsh.org/index.html) for in-depth understanding of the code.
