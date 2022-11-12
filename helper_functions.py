@@ -186,7 +186,9 @@ def rotationMatrix(vector1, vector2):  # Rotate from one vector basis to another
 
     return R
 
-def rotation_matrix_point(vector1,  vector2): # Rotates a point from one basis to another
+
+# Rotates a point from one basis to another
+def rotation_matrix_point(vector1,  vector2):
     cross = np.cross(vector1, vector2)
     u = cross/np.linalg.norm(cross)  # Rotation Axis
     # print("u = " + str(u))
@@ -206,7 +208,9 @@ def rotation_matrix_point(vector1,  vector2): # Rotates a point from one basis t
                       u[0]*sin, cos+(u[2]**2)*(cos_1)]])
     return R
 
-def move(trimeshObj, distance_vector): # Moves a Trimesh object along a direction vector in its coordinate space
+
+# Moves a Trimesh object along a direction vector in its coordinate space
+def move(trimeshObj, distance_vector):
     trimeshObj.vertices += distance_vector
 
 
@@ -214,7 +218,9 @@ def zPoints(mesh):  # Input: trimeshObj
     output = mesh.vertices
     return output[:, 2]  # Output: Array of z coordinates
 
-def lowest_point_file(filename, radius): # Gets the lowest point of a mesh given the filename
+
+# Gets the lowest point of a mesh given the filename
+def lowest_point_file(filename, radius):
     your_mesh = Mesh.from_file(filename)  # Load the mesh
     # Trim the mesh around the centroid(Trimesh property)
     trimCircle(your_mesh, radius)
@@ -226,7 +232,8 @@ def lowest_point_file(filename, radius): # Gets the lowest point of a mesh given
     return low_point
 
 
-def rotation_matrix_file(filename, radius): # Outputs the rotation matrix given a filename
+# Outputs the rotation matrix given a filename
+def rotation_matrix_file(filename, radius):
     your_mesh = Mesh.from_file(filename)  # Load the mesh
     trimCircle(your_mesh, radius)  # Trim around the centroid(Trimesh property)
     # Covert to Trimesh object
@@ -237,7 +244,8 @@ def rotation_matrix_file(filename, radius): # Outputs the rotation matrix given 
     return rotationMatrix(normalVec, np.array([0, 0, 1]))
 
 
-def rotation_matrix__point_file(filename, radius):  # Outputs the rotation matrix for a point given a filename
+# Outputs the rotation matrix for a point given a filename
+def rotation_matrix__point_file(filename, radius):
     your_mesh = Mesh.from_file(filename)  # Load the mesh
     trimCircle(your_mesh, radius)  # Trim around the centroid(Trimesh property)
     # Covert to Trimesh object
@@ -259,7 +267,10 @@ def rotation_matrix_file_package(filename, radius):
     return rotationMatrix(normalVec, np.array([0, 0, 1])), rotation_matrix_point(np.array([0, 0, 1]), normalVec)
 
 # The goal of this function is to limit the computation time by reducing the number of times the mesh is loaded
-def trimming_package(filename, radius): #Returns the lowest point in the mesh, rotation matrix, and rotation matrix for a point
+
+
+# Returns the lowest point in the mesh, rotation matrix, and rotation matrix for a point
+def trimming_package(filename, radius):
     your_mesh = Mesh.from_file(filename)  # Load the mesh
     trimCircle(your_mesh, radius)  # Trim around the centroid(Trimesh property)
     # Covert to Trimesh object
@@ -270,7 +281,7 @@ def trimming_package(filename, radius): #Returns the lowest point in the mesh, r
         filename, radius)
     trimmed.apply_transform(rotation_matrix)
     low_point = lowest_point(trimmed)  # Find the lowest point of the mesh
-    return low_point, rotation_matrix, rotation_matrix_point
+    return normalVec, low_point, rotation_matrix, rotation_matrix_point
 
 
 def histPlot(n, bins):  # Rolling mean graphing method for histograms
@@ -283,14 +294,27 @@ def histPlot(n, bins):  # Rolling mean graphing method for histograms
     return (np.array(nArr), np.array(binsArr))
 
 
-def slicer(mesh):  # Input: Trimesh object
+def slicer(mesh, plane, buffer):  # Input: Trimesh object
     points = mesh.vertices
     # Boolean array of the within the bounds of the y-z plane
-    mask1 = -2 < points[:, 0]
-    mask2 = 2 > points[:, 0]
+    if plane == 'x':
+        planeN = 0
+    elif plane == 'y':
+        planeN = 1
+    elif plane == 'z':
+        planeN = 2
+    mask1 = -buffer < points[:, planeN]
+    mask2 = buffer > points[:, planeN]
     mask = []
     for i in range(len(points)):
         mask.append(mask1[i] and mask2[i])
     points = points[mask]  # Points within the bounds of the y-z plane
-    # Returns: y-coordinates and z-coordinates
-    return (points[:, 1], points[:, 2])
+    if plane == 'x':
+        # Returns: y-coordinates and z-coordinates
+        return (points[:, 1], points[:, 2])
+    elif plane == 'y':
+        # Returns: x-coordinates and z-coordinates
+        return (points[:, 0], points[:, 2])
+    elif plane == 'z':
+        # Returns: x-coordinates and y-coordinates
+        return (points[:, 0], points[:, 1])
