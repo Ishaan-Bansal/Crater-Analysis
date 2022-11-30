@@ -211,7 +211,7 @@ def rotation_matrix_point(vector1,  vector2):
 
 # Moves a Trimesh object along a direction vector in its coordinate space
 def move(trimeshObj, distance_vector):
-    trimeshObj.vertices += distance_vector
+    trimeshObj.vertices -= distance_vector
 
 
 def zPoints(mesh):  # Input: trimeshObj
