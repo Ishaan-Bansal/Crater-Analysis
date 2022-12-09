@@ -97,7 +97,7 @@ help.move(mesh, np.array([0, 0, -30]))
 # Getting a slice of the mesh in x-z plane
 x, y = help.slicer(mesh, plane='z', buffer=0.5)
 plt.figure(5)
-plt.plot(x, y, 'bs', linewidth=2)
+plt.plot(x, y, 'k-', linewidth=2)
 # plt.axhline(y=baseline, color='g', linestyle='dashed')
 plt.axis('equal')
 plt.show()

@@ -1,4 +1,4 @@
-# CraterAnalysis (In Development)
+# Crater Analysis (In Development)
 
 The purpose of this project is to provide meaningful analysis of craters. The primary requirement is an interpretable .stl file. 
 

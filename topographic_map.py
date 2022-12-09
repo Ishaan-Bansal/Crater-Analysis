@@ -31,4 +31,28 @@ log_zpoints = np.log10(np.abs(zpoints))
 crater.visual.vertex_colors = trimesh.visual.interpolate(
     log_zpoints, color_map='turbo')
 
-crater.show()
+scene_0 = trimesh.Scene()
+scene_0.add_geometry(crater)
+scene_0.show()
+
+curvature = np.gradient(zpoints)
+crater.visual.vertex_colors = trimesh.visual.interpolate(
+    curvature, color_map='turbo')
+
+scene1 = trimesh.Scene()
+scene1.add_geometry(crater)
+scene1.show()
+
+crater.visual.vertex_colors = trimesh.visual.interpolate(
+    curvature[0], color_map='turbo')
+
+scene2 = trimesh.Scene()
+scene2.add_geometry(crater)
+scene2.show()
+
+crater.visual.vertex_colors = trimesh.visual.interpolate(
+    curvature[1], color_map='turbo')
+
+scene3 = trimesh.Scene()
+scene3.add_geometry(crater)
+scene3.show()
