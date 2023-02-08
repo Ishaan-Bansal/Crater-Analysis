@@ -318,3 +318,46 @@ def slicer(mesh, plane, buffer):  # Input: Trimesh object
     elif plane == 'z':
         # Returns: x-coordinates and y-coordinates
         return (points[:, 0], points[:, 1])
+
+
+def create_trimesh_plane(a, b, d):
+    # vertices of the cube
+    vertices = np.array([250, 250, 250*a+250*b+d, -250, 250, -250*a+250*b+d, 250, -250, 250*a-250*b+d, -250, -250, -250*a-250*b+d],
+                        order='C',
+                        dtype=object).reshape((-1, 3))
+    vertices = np.array(vertices, dtype=np.float64)
+    # hardcoded face indices
+    faces = [0, 1, 2, 2, 3, 1, 1, 3, 2, 2, 1, 0]
+    faces = np.array(faces, order='C', dtype=np.int64).reshape((-1, 3))
+    # hardcoded face normals
+    face_normals = [a, b, -1, a, b, -1, a, b, 1, a, b, 1]
+    face_normals = np.asanyarray(face_normals,
+                                 order='C',
+                                 dtype=np.float64).reshape(-1, 3)
+    # Create Trimesh object
+    plane = trimesh.Trimesh(vertices=vertices,
+                            faces=faces,
+                            face_normals=face_normals,
+                            process=False)
+    return plane
+
+
+def pixels_within_circle(array, radius, spacing, crater_start):
+    height = array.shape[0]
+    width = array.shape[1]
+    xc = int(height/2)
+    yc = int(width/2)
+    volume = 0
+    area = spacing**2
+    for i in range(height):
+        for j in range(width):
+            r = np.sqrt((i-yc)**2 + (j-xc)**2)
+            if r < radius:
+                volume += area*(crater_start - array[i][j])
+    return volume
+
+
+def cut_top(mesh, max):
+    for x in mesh.vertices:
+        if x[2] > max:
+            x = [0, 0, 0]
