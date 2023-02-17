@@ -12,11 +12,11 @@ import ray_tracing_X_Slices as rtx
 filename = 'Crater_STL_Files/02_09_2022_250Torr_test3.stl'
 # filename = "Crater_STL_Files/2022_11_01_50mTorr_h10_1s_032gs_noacrylic.stl"
 # Radius for trimming_package; Effects the normal vector and rotation matrix
-trimRadius = 40
+trimRadius = 250
 # Radius for trimming the mesh around a point; Effects the histogram and slice
-displayRadius = 40
+displayRadius = 250
 # The bounds of the square in which the rays are limited
-bounds = 20
+bounds = 150
 # The spacing between each ray
 spacing = 5
 # If the spacing is great, than the resolution of the data is high and vice versa
@@ -36,11 +36,11 @@ mesh.apply_transform(rotation_matrix)
 # mesh.show()
 
 help.move(mesh, lowest_point)
-mesh.show()
+# mesh.show()
 
-# ray_directions_array = np.array([])
-# ray_origins_array = np.array([])
-# index_tri_array = np.array([])
+ray_directions_array = np.array([])
+ray_origins_array = np.array([])
+index_tri_array = np.array([], dtype=int)
 locations_array = np.array([])
 x_locations = []
 y_locations = []
@@ -57,9 +57,9 @@ for y in range(-bounds, bounds+spacing, spacing):
         locations, index_ray, index_tri = mesh.ray.intersects_location(
             ray_origins=ray_origins, ray_directions=ray_directions)
         locations_row.append(locations[0])
-        # ray_directions_array = np.append(ray_directions_array, ray_directions)
-        # ray_origins_array = np.append(ray_origins_array, ray_origins)
-        # index_tri_array = np.append(index_tri_array, index_tri)
+        ray_directions_array = np.append(ray_directions_array, ray_directions)
+        ray_origins_array = np.append(ray_origins_array, ray_origins)
+        index_tri_array = np.append(index_tri_array, index_tri)
 
     locations_row = np.array(locations_row)
     x_locations.append(locations_row[:, 0])
@@ -73,13 +73,13 @@ y_locations = np.array(y_locations, dtype=float)
 z_locations = np.array(z_locations, dtype=float)
 divergence_vis = np.array(divergence_vis)
 
-# ray_visualize = trimesh.load_path(np.hstack((ray_origins_array,
-#                                              ray_origins_array + ray_directions_array*5.0)).reshape(-1, 2, 3))
-# mesh.visual.face_colors = [255, 255, 255, 255]
-# mesh.visual.face_colors[index_tri_array] = [255, 0, 0, 255]
-# scene = trimesh.Scene([mesh,
-#                        ray_visualize])
-# scene.show()
+ray_visualize = trimesh.load_path(np.hstack((ray_origins_array,
+                                             ray_origins_array + ray_directions_array*5.0)).reshape(-1, 2, 3))
+mesh.visual.face_colors = [255, 255, 255, 255]
+mesh.visual.face_colors[index_tri_array] = [255, 0, 0, 255]
+scene = trimesh.Scene([mesh,
+                       ray_visualize])
+scene.show()
 
 gradient = np.gradient(z_locations)
 gradient_norm = np.sqrt(gradient[0]**2 + gradient[1]**2)
@@ -193,3 +193,7 @@ radius = np.sqrt(sol[0][2] + x_c**2 + y_c**2)
 # axes.add_patch(Drawing_uncolored_circle)
 # plt.title('Circle')
 # plt.show()
+
+mesh.vertices = help.cut_top(mesh, crater_start)
+mesh.remove_infinite_values()
+mesh.show()

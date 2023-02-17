@@ -358,6 +358,9 @@ def pixels_within_circle(array, radius, spacing, crater_start):
 
 
 def cut_top(mesh, max):
+    arr = []
     for x in mesh.vertices:
         if x[2] > max:
-            x = [0, 0, 0]
+            x = [np.nan, np.nan, np.nan]
+        arr.append(x)
+    return arr
