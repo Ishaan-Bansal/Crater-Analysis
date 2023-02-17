@@ -3,7 +3,7 @@ import trimesh
 import numpy as np
 from stl import Mesh
 
-filename = "Crater_STL_Files/02_09_2022_250Torr_test3.stl"
+filename = "Crater_STL_Files/test_crater.stl"
 # Radius for trimming_package; Effects the normal vector and rotation matrix
 trimRadius = 250
 # Radius for trimming the mesh around a point; Effects the histogram and slice
