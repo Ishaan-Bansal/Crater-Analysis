@@ -342,18 +342,22 @@ def create_trimesh_plane(a, b, d):
     return plane
 
 
-def pixels_within_circle(array, radius, spacing, crater_start):
+def pixels_within_circle(array, radius, spacing, crater_top):
     height = array.shape[0]
     width = array.shape[1]
     xc = int(height/2)
     yc = int(width/2)
     volume = 0
     area = spacing**2
+    count = 0
     for i in range(height):
         for j in range(width):
             r = np.sqrt((i-yc)**2 + (j-xc)**2)
             if r < radius:
-                volume += area*(crater_start - array[i][j])
+                count += 1
+                volume += area*(crater_top-array[i][j])
+    print(count)
+    print(area)
     return volume
 
 
