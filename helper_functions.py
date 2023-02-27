@@ -213,6 +213,9 @@ def rotation_matrix_point(vector1,  vector2):
 def move(trimeshObj, distance_vector):
     trimeshObj.vertices -= distance_vector
 
+# Moves a Numpy STL object along a direction vector in its coordinate space
+def move_np_stl(stlObj, distance_vector):
+    stlObj.translate(-distance_vector)
 
 def zPoints(mesh):  # Input: trimeshObj
     output = mesh.vertices
@@ -342,22 +345,18 @@ def create_trimesh_plane(a, b, d):
     return plane
 
 
-def pixels_within_circle(array, radius, spacing, crater_top):
+def crater_volume(array, radius, spacing, crater_top):
     height = array.shape[0]
     width = array.shape[1]
     xc = int(height/2)
     yc = int(width/2)
     volume = 0
     area = spacing**2
-    count = 0
     for i in range(height):
         for j in range(width):
             r = np.sqrt((i-yc)**2 + (j-xc)**2)
-            if r < radius:
-                count += 1
+            if r <= radius:
                 volume += area*(crater_top-array[i][j])
-    print(count)
-    print(area)
     return volume
 
 
@@ -368,3 +367,22 @@ def cut_top(mesh, max):
             x = [np.nan, np.nan, np.nan]
         arr.append(x)
     return arr
+
+def crater_volume_tetra(mesh_triangles, radius, crater_start):
+    volume = 0
+    once = True
+    for triangle in mesh_triangles:
+        x, y, z = np.mean(triangle[:,0]), np.mean(triangle[:,1]), np.mean(triangle[:,2])
+        if not np.sqrt(x**2 + y**2) < radius:
+            continue
+        if not z < crater_start:
+            continue
+        matrix = np.ones((4,4))
+        matrix[0:3, 0:3] = triangle
+        matrix[3, 0:3] = [0,0,crater_start]
+        volume += (np.abs(np.linalg.det(matrix))/6)
+        # if once:
+        #     print(matrix)
+        #     once = False
+        #     print(volume)
+    return volume
