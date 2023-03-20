@@ -58,13 +58,13 @@ def x_slice(mesh):
         ray_origins=ray_origins,
         ray_directions=ray_directions)
 
-    ray_visualize = trimesh.load_path(np.hstack((ray_origins,
-                                                 ray_origins + ray_directions*5.0)).reshape(-1, 2, 3))
-    mesh.visual.face_colors = [255, 255, 255, 255]
-    mesh.visual.face_colors[index_tri] = [255, 0, 0, 255]
-    scene = trimesh.Scene([mesh,
-                           ray_visualize])
-    scene.show()
+    # ray_visualize = trimesh.load_path(np.hstack((ray_origins,
+    #                                              ray_origins + ray_directions*5.0)).reshape(-1, 2, 3))
+    # mesh.visual.face_colors = [255, 255, 255, 255]
+    # mesh.visual.face_colors[index_tri] = [255, 0, 0, 255]
+    # scene = trimesh.Scene([mesh,
+    #                        ray_visualize])
+    # scene.show()
     return locations
 
 

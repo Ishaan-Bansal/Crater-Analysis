@@ -12,7 +12,7 @@ import ray_tracing_X_Slices as rtx
 
 if __name__ == '__main__':
     # Write the relative path to the file you want to load
-    filename = 'Crater_STL_Files/02_09_2022_250Torr_test3.stl'
+    filename = 'Crater_STL_Files/2022_11_01_6Torr_h10_1s_noacrylic_remeshed.stl'
     # filename = "Crater_STL_Files/2022_11_01_50mTorr_h10_1s_032gs_noacrylic.stl"
     # Radius for trimming_package; Effects the normal vector and rotation matrix
     trimRadius = 250
@@ -35,21 +35,12 @@ if __name__ == '__main__':
     new_mesh = Mesh.from_file(
         filename)
     help.trimCircleGivenPoint(new_mesh, lowest_point_r, displayRadius)
-    # help.move_np_stl(new_mesh, lowest_point_r)
     mesh = trimesh.Trimesh(**trimesh.triangles.to_kwargs(new_mesh.vectors))
     mesh.remove_infinite_values()
     mesh.apply_transform(rotation_matrix)
-    # mesh.show()
 
-    # mesh = trimesh.load_mesh(filename)
-    # mesh.apply_transform(rotation_matrix)
-    # mask = displayRadius**2 > mesh.vertices[:,0]**2 + mesh.vertices[:,1]**2
-    # mesh.update_vertices(mask)
-    # mesh.show()
-
-    # lowest_point = help.lowest_point(mesh)
     help.move(mesh, lowest_point)
-    # mesh.show()
+    mesh.show()
 
     ray_directions_array = np.array([])
     ray_origins_array = np.array([])
@@ -103,26 +94,26 @@ if __name__ == '__main__':
     double_gradient = np.gradient(gradient_norm)
     double_gradient_norm = np.sqrt(double_gradient[0]**2 + double_gradient[1]**2)
 
-    # fig = plt.figure(1)
-    # ax = plt.axes()
-    # CS = ax.contour(x_locations, y_locations, double_gradient_norm, cmap='turbo')
-    # ax.clabel(CS, inline=True, fontsize=10)
-    # ax.set_title('2D Gradient Contour')
+    fig = plt.figure(1)
+    ax = plt.axes()
+    CS = ax.contour(x_locations, y_locations, double_gradient_norm, cmap='turbo')
+    ax.clabel(CS, inline=True, fontsize=10)
+    ax.set_title('2D Gradient Contour')
 
-    # fig = plt.figure(2)
-    # ax = plt.axes(projection='3d')
-    # ax.contour3D(x_locations, y_locations, double_gradient_norm, 50, cmap='turbo')
-    # ax.set_xlabel('x')
-    # ax.set_ylabel('y')
-    # ax.set_zlabel('gradient')
-    # ax.set_title('3D Gradient Contour')
+    fig = plt.figure(2)
+    ax = plt.axes(projection='3d')
+    ax.contour3D(x_locations, y_locations, double_gradient_norm, 50, cmap='turbo')
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('gradient')
+    ax.set_title('3D Gradient Contour')
 
-    # fig = plt.figure(3)
-    # img = plt.imshow(z_locations, interpolation='none', cmap='turbo')
+    fig = plt.figure(3)
+    img = plt.imshow(z_locations, interpolation='none', cmap='turbo')
 
-    # fig = plt.figure(4)
-    # img = plt.imshow(double_gradient_norm, interpolation='none', cmap='turbo')
-    # plt.show()
+    fig = plt.figure(4)
+    img = plt.imshow(double_gradient_norm, interpolation='none', cmap='turbo')
+    plt.show()
 
     ridge_indices = []
     ridge_z = []
@@ -178,12 +169,12 @@ if __name__ == '__main__':
 
     crater_start = np.mean(ridge_z)
     print("Crater start: ", crater_start)
-    # a, b, d = 0, 0, crater_start
-    # plane = help.create_trimesh_plane(a, b, d)
+    a, b, d = 0, 0, crater_start
+    plane = help.create_trimesh_plane(a, b, d)
 
-    # scene = trimesh.Scene([mesh,
-    #                        plane])
-    # scene.show()
+    scene = trimesh.Scene([mesh,
+                           plane])
+    scene.show()
 
     x, y = [], []
     for i in ridge_indices:
@@ -250,6 +241,11 @@ if __name__ == '__main__':
 
 
 def crater_properties(mesh):
+    # The bounds of the square in which the rays are limited
+    bounds = 150
+    # The spacing between each ray
+    spacing = 1
+
     ray_directions_array = np.array([])
     ray_origins_array = np.array([])
     index_tri_array = np.array([], dtype=int)
@@ -263,6 +259,7 @@ def crater_properties(mesh):
     for y in range(-bounds, bounds+spacing, spacing):
         locations_row = []
         for x in range(-bounds, bounds+spacing, spacing):
+            # print(x,y)
             ray_directions = np.array([[0, 0, -1]])
             ray_origins = np.array([[x, y, 200]])
             divergence_vis.append(np.array([0, 0, 0]))

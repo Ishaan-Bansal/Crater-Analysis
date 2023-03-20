@@ -386,3 +386,25 @@ def crater_volume_tetra(mesh_triangles, radius, crater_start):
         #     once = False
         #     print(volume)
     return volume
+
+
+def load_mesh(filename):
+    # Radius for trimming_package; Effects the normal vector and rotation matrix
+    trimRadius = 250
+    # Radius for trimming the mesh around a point; Effects the histogram and slice
+    displayRadius = 250
+
+    normal_vector, lowest_point, rotation_matrix, rotation_matrix_point = trimming_package(
+        filename, trimRadius)
+    # Find the lowest point in the unrotated basis
+    lowest_point_r = rotation_matrix_point @ lowest_point
+
+    # Trim around the lowest_point
+    new_mesh = Mesh.from_file(
+        filename)
+    trimCircleGivenPoint(new_mesh, lowest_point_r, displayRadius)
+    mesh = trimesh.Trimesh(**trimesh.triangles.to_kwargs(new_mesh.vectors))
+    mesh.remove_infinite_values()
+    mesh.apply_transform(rotation_matrix)
+    move(mesh, lowest_point)
+    return mesh

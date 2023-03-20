@@ -8,7 +8,7 @@ from stl import Mesh
 # Heat map for crater visualization
 
 # Write the relative path to the file you want to load
-filename = 'Crater_STL_Files/02_09_2022_6Torr_test2.stl'
+filename = 'Crater_STL_Files/2022_11_01_6Torr_h10_1s_noacrylic.stl'
 # Radius for trimming_package; Effects the normal vector and rotation matrix
 trimRadius = 250
 # Radius for trimming the mesh around a point; Effects the histogram and slice
@@ -25,6 +25,7 @@ help.trimCircleGivenPoint(your_mesh, lowest_point, displayRadius)
 crater = trimesh.Trimesh(**trimesh.triangles.to_kwargs(your_mesh.vectors))
 # Rotate the the mesh to the x-y plane
 crater.apply_transform(rotation_matrix)
+help.move(crater, lowest_point)
 
 zpoints = help.zPoints(crater)  # - lowest_point[2] + 1
 log_zpoints = np.log10(np.abs(zpoints))
@@ -35,24 +36,24 @@ scene_0 = trimesh.Scene()
 scene_0.add_geometry(crater)
 scene_0.show()
 
-curvature = np.gradient(zpoints)
-crater.visual.vertex_colors = trimesh.visual.interpolate(
-    curvature, color_map='turbo')
+# curvature = np.gradient(zpoints)
+# crater.visual.vertex_colors = trimesh.visual.interpolate(
+#     curvature, color_map='turbo')
 
-scene1 = trimesh.Scene()
-scene1.add_geometry(crater)
-scene1.show()
+# scene1 = trimesh.Scene()
+# scene1.add_geometry(crater)
+# scene1.show()
 
-crater.visual.vertex_colors = trimesh.visual.interpolate(
-    curvature[0], color_map='turbo')
+# crater.visual.vertex_colors = trimesh.visual.interpolate(
+#     curvature[0], color_map='turbo')
 
-scene2 = trimesh.Scene()
-scene2.add_geometry(crater)
-scene2.show()
+# scene2 = trimesh.Scene()
+# scene2.add_geometry(crater)
+# scene2.show()
 
-crater.visual.vertex_colors = trimesh.visual.interpolate(
-    curvature[1], color_map='turbo')
+# crater.visual.vertex_colors = trimesh.visual.interpolate(
+#     curvature[1], color_map='turbo')
 
-scene3 = trimesh.Scene()
-scene3.add_geometry(crater)
-scene3.show()
+# scene3 = trimesh.Scene()
+# scene3.add_geometry(crater)
+# scene3.show()
