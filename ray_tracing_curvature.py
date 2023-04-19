@@ -6,13 +6,20 @@ from stl import Mesh
 import matplotlib.pyplot as plt
 import statistics as stats
 import scipy.ndimage
+from scipy.signal import medfilt2d
 import ray_tracing_Z_Slices as rtz
 import ray_tracing_X_Slices as rtx
+from skimage import data, color
+from skimage.transform import hough_circle, hough_circle_peaks
+from skimage.feature import canny
+from skimage.draw import circle_perimeter
+from skimage.util import img_as_ubyte
+import pandas as pd
 
 
 if __name__ == '__main__':
     # Write the relative path to the file you want to load
-    filename = 'Crater_STL_Files/2022_11_01_6Torr_h10_1s_noacrylic_remeshed.stl'
+    filename = 'Crater_STL_Files/2022_10_25_6Torr_h15_1s_noacrylic.stl'
     # filename = "Crater_STL_Files/2022_11_01_50mTorr_h10_1s_032gs_noacrylic.stl"
     # Radius for trimming_package; Effects the normal vector and rotation matrix
     trimRadius = 250
@@ -40,7 +47,7 @@ if __name__ == '__main__':
     mesh.apply_transform(rotation_matrix)
 
     help.move(mesh, lowest_point)
-    mesh.show()
+    # mesh.show()
 
     ray_directions_array = np.array([])
     ray_origins_array = np.array([])
@@ -88,11 +95,18 @@ if __name__ == '__main__':
     #                        ray_visualize])
     # scene.show()
 
+    # z_locations = medfilt2d(z_locations, kernel_size=3)
+
     gradient = np.gradient(z_locations)
     gradient_norm = np.sqrt(gradient[0]**2 + gradient[1]**2)
+    # gradient_norm = medfilt2d(gradient_norm, kernel_size=3)
 
     double_gradient = np.gradient(gradient_norm)
     double_gradient_norm = np.sqrt(double_gradient[0]**2 + double_gradient[1]**2)
+    double_gradient_norm = medfilt2d(double_gradient_norm, kernel_size=17)
+
+    DF = pd.DataFrame(z_locations)
+    DF.to_csv("data4.csv", header=False, index=False)
 
     fig = plt.figure(1)
     ax = plt.axes()
@@ -112,8 +126,26 @@ if __name__ == '__main__':
     img = plt.imshow(z_locations, interpolation='none', cmap='turbo')
 
     fig = plt.figure(4)
-    img = plt.imshow(double_gradient_norm, interpolation='none', cmap='turbo')
-    plt.show()
+    img = plt.imshow(gradient_norm, interpolation='none', cmap='turbo')
+
+    # # Detect circles of different radii
+    # hough_radii = np.arange(20, 150, 5)
+    # hough_res = hough_circle(double_gradient_norm, hough_radii)
+
+    # # Select the most prominent circle
+    # accums, cx, cy, radii = hough_circle_peaks(hough_res, hough_radii, total_num_peaks=1)
+
+    # ridge_z = []
+    # # Draw the most prominent circle on the elevations array
+    # circle_elevations = np.copy(double_gradient_norm)
+    # for center_y, center_x, radius in zip(cy, cx, radii):
+    #     circy, circx = circle_perimeter(center_y, center_x, radius,
+    #                                     shape=double_gradient_norm.shape)
+    #     ridge_z.append(z_locations[circy, circx])
+
+    # plt.imshow(circle_elevations, interpolation='none', cmap='turbo')
+
+    # plt.show()
 
     ridge_indices = []
     ridge_z = []
@@ -132,7 +164,7 @@ if __name__ == '__main__':
         length = int(np.round(np.hypot(x1-x0, y1-y0)))
         x, y = np.linspace(x0, x1, length), np.linspace(y0, y1, length)
         mask = np.sqrt((x-radius_x)**2 + (y-radius_y) **
-                    2) >= (0.1*(radius_x+radius_y)/2)
+                    2) >= (0.25*(radius_x+radius_y)/2)
         x, y = x[mask], y[mask]
 
         # Extract the values along the line
@@ -148,15 +180,13 @@ if __name__ == '__main__':
         height_line = z_locations[x, y]
         ridge_z.append(height_line[index])
 
-        plt.plot(x, y, 'ko')
-
 
     ridge_indices = np.array(ridge_indices)
     ridge_z = np.array(ridge_z)
-    # print(ridge_indices)
-    # plt.figure(5)
-    # plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'ko')
-    # plt.show()
+    print(ridge_indices)
+    plt.figure(5)
+    plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'ko')
+    plt.show()
 
     # size = ridge_indices.shape[0]
     # ridge_indices_copy = np.ones((size, 3))
@@ -191,6 +221,8 @@ if __name__ == '__main__':
     x_c = sol[0][0]/2
     y_c = sol[0][1]//2
     radius = np.sqrt(sol[0][2] + x_c**2 + y_c**2)
+
+    # radius = radii[0]
 
     print("Radius: ", radius)
 
@@ -238,6 +270,8 @@ if __name__ == '__main__':
 
     # help.cut_top(mesh, crater_start)
     # mesh.show()
+    info = f"Depth: {crater_start} , Diameter: {radius*2} , Volume: {point_mesh_volume}"
+    print(info)
 
 
 def crater_properties(mesh):
@@ -259,7 +293,6 @@ def crater_properties(mesh):
     for y in range(-bounds, bounds+spacing, spacing):
         locations_row = []
         for x in range(-bounds, bounds+spacing, spacing):
-            # print(x,y)
             ray_directions = np.array([[0, 0, -1]])
             ray_origins = np.array([[x, y, 200]])
             divergence_vis.append(np.array([0, 0, 0]))
@@ -285,6 +318,7 @@ def crater_properties(mesh):
 
     double_gradient = np.gradient(gradient_norm)
     double_gradient_norm = np.sqrt(double_gradient[0]**2 + double_gradient[1]**2)
+    double_gradient_norm = medfilt2d(double_gradient_norm, kernel_size=17)
 
     ridge_indices = []
     ridge_z = []
@@ -302,7 +336,7 @@ def crater_properties(mesh):
         length = int(np.round(np.hypot(x1-x0, y1-y0)))
         x, y = np.linspace(x0, x1, length), np.linspace(y0, y1, length)
         mask = np.sqrt((x-radius_x)**2 + (y-radius_y) **
-                    2) >= (0.1*(radius_x+radius_y)/2)
+                    2) >= (0.2*(radius_x+radius_y)/2)
         x, y = x[mask], y[mask]
 
         # Extract the values along the line

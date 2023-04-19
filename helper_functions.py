@@ -408,3 +408,25 @@ def load_mesh(filename):
     mesh.apply_transform(rotation_matrix)
     move(mesh, lowest_point)
     return mesh
+
+def from_filename(filename):
+    r = ""
+    d = ""
+    radius = False
+    depth = False
+    for char in filename:
+        if char == "r":
+            radius = True
+            continue
+        elif char == "_":
+            radius = False
+            continue
+        elif char == "d":
+            depth = True
+            continue
+        
+        if radius:
+            r += char
+        elif depth:
+            d += char
+    return r, d
