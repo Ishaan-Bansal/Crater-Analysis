@@ -1,4 +1,3 @@
-from audioop import cross
 from stl import Mesh
 import numpy as np
 import trimesh
@@ -430,3 +429,43 @@ def from_filename(filename):
         elif depth:
             d += char
     return r, d
+
+def from_filename_t2(filename):
+    r = ""
+    d = ""
+    c = ""
+    radius = False
+    depth = False
+    curv = False
+    for char in filename:
+        if char == "r":
+            radius = True
+            continue
+        elif radius and char == "_":
+            radius = False
+            continue
+        elif char == "d":
+            depth = True
+            continue
+        elif depth and char == "_":
+            depth = False
+            continue
+        elif char == "c":
+            curv = True
+            continue
+        elif curv and char == "_":
+            break
+        
+        if radius:
+            r += char
+        elif depth:
+            d += char
+        elif curv:
+            c += char
+    return r, d, c
+
+def find_in_dict(dict, idx):
+    for key in dict.keys():
+        if key == idx:
+            return True
+    return False
