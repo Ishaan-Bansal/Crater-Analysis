@@ -9,10 +9,10 @@ import helper_functions as help
 import numpy as np
 import pandas as pd
 
-df = pd.DataFrame()
+# df = pd.DataFrame()
 
 # Write the relative path to the folder you want to load
-path = "Crater_STL_Files"
+path = "Crater STLs May 12th 2023"
 cwd = os.getcwd()
 os.chdir(path)
 for filename in os.listdir():
@@ -40,7 +40,7 @@ for filename in os.listdir():
     #     df.loc[radius_row] = [str()] * len(df.columns) 
 
     os.chdir(cwd)
-    os.chdir("Crater_Properties_2")
+    os.chdir("Crater_Properties_May_12_2023")
     os.mkdir(filename)
     os.chdir(filename)
 
@@ -90,6 +90,6 @@ for filename in os.listdir():
     os.chdir(path)
 
 os.chdir(cwd)
-df.to_csv("Crater_Properties/test_craters.csv")
+# df.to_csv("Crater_Properties/test_craters.csv")
 
 print("Finished")

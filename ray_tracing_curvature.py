@@ -19,7 +19,7 @@ import pandas as pd
 
 if __name__ == '__main__':
     # Write the relative path to the file you want to load
-    filename = 'Crater_STL_Files/2022_10_25_6Torr_h15_1s_noacrylic.stl'
+    filename = 'Crater_STL_Files/crater_ambient_cropped.stl'
     # filename = "Crater_STL_Files/2022_11_01_50mTorr_h10_1s_032gs_noacrylic.stl"
     # Radius for trimming_package; Effects the normal vector and rotation matrix
     trimRadius = 250
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     # The bounds of the square in which the rays are limited
     bounds = 150
     # The spacing between each ray
-    spacing = 1
+    spacing = 3
     # If the spacing is great, than the resolution of the data is high and vice versa
 
     # mesh = trimesh.load_mesh(filename)
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     mesh.apply_transform(rotation_matrix)
 
     help.move(mesh, lowest_point)
-    # mesh.show()
+    mesh.show()
 
     ray_directions_array = np.array([])
     ray_origins_array = np.array([])
@@ -164,7 +164,7 @@ if __name__ == '__main__':
         length = int(np.round(np.hypot(x1-x0, y1-y0)))
         x, y = np.linspace(x0, x1, length), np.linspace(y0, y1, length)
         mask = np.sqrt((x-radius_x)**2 + (y-radius_y) **
-                    2) >= (0.25*(radius_x+radius_y)/2)
+                    2) >= (0.2*(radius_x+radius_y)/2)
         x, y = x[mask], y[mask]
 
         # Extract the values along the line
