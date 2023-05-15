@@ -19,7 +19,7 @@ import pandas as pd
 
 if __name__ == '__main__':
     # Write the relative path to the file you want to load
-    filename = 'Crater_STL_Files/crater_ambient_cropped.stl'
+    filename = 'Crater_STL_Files/25_10_2022_6Torr_0_3s_noacrylic.stl'
     # filename = "Crater_STL_Files/2022_11_01_50mTorr_h10_1s_032gs_noacrylic.stl"
     # Radius for trimming_package; Effects the normal vector and rotation matrix
     trimRadius = 250
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     # The bounds of the square in which the rays are limited
     bounds = 150
     # The spacing between each ray
-    spacing = 3
+    spacing = 1
     # If the spacing is great, than the resolution of the data is high and vice versa
 
     # mesh = trimesh.load_mesh(filename)
