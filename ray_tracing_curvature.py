@@ -19,7 +19,7 @@ import pandas as pd
 
 if __name__ == '__main__':
     # Write the relative path to the file you want to load
-    filename = 'Lab Craters\Batch Two STLs\crater4_03_29_2022.stl'
+    filename = 'Testing/Test Crater Type 2 STLs/r20_d5_c25_t2.stl'
     # filename = "Crater_STL_Files/2022_11_01_50mTorr_h10_1s_032gs_noacrylic.stl"
     # Radius for trimming_package; Effects the normal vector and rotation matrix
     trimRadius = 250
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     mesh.apply_transform(rotation_matrix)
 
     help.move(mesh, lowest_point)
-    mesh.show()
+    # mesh.show()
 
     ray_directions_array = np.array([])
     ray_origins_array = np.array([])
@@ -188,8 +188,8 @@ if __name__ == '__main__':
     ridge_z = np.array(ridge_z)
     print(ridge_indices)
     # plt.figure(5)
-    # plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'ko')
-    plt.show()
+    plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'r1')
+    # plt.show()
 
     # size = ridge_indices.shape[0]
     # ridge_indices_copy = np.ones((size, 3))
@@ -200,6 +200,18 @@ if __name__ == '__main__':
     # a, b, d = plane_eq[0]
     # plane = help.create_trimesh_plane(a, b, d)
 
+    x, y = [], []
+    for i in ridge_indices:
+        x.append(x_locations[i[0]][i[1]])
+        y.append(y_locations[i[0]][i[1]])
+
+    x, y, ridge_indices, ridge_z = help.remove_outliers(x,y, ridge_indices, ridge_z)
+    
+    x, y = np.array(x), np.array(y)
+
+    plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'kx')
+    plt.show()
+
     crater_start = np.mean(ridge_z)
     print("Crater start: ", crater_start)
     a, b, d = 0, 0, crater_start
@@ -208,15 +220,6 @@ if __name__ == '__main__':
     scene = trimesh.Scene([mesh,
                            plane])
     scene.show()
-
-    x, y = [], []
-    for i in ridge_indices:
-        x.append(x_locations[i[0]][i[1]])
-        y.append(y_locations[i[0]][i[1]])
-
-    x, y = help.remove_outliers(x,y)
-    
-    x, y = np.array(x), np.array(y)
 
 
     b = x**2 + y**2

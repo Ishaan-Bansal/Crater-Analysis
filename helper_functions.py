@@ -470,23 +470,34 @@ def find_in_dict(dict, idx):
             return True
     return False
 
-def remove_outliers(x , y):
+def remove_outliers(x , y, ridge_indices, ridge_z):
     r = []
     for i in range(len(x)):
         r.append(np.sqrt(x[i]**2 + y[i]**2))
     x_bar = np.std(r)
     remove_x = []
     remove_y = []
-    for i in range(len(x)):
-        if r[i] > np.mean(r) + x_bar or r[i] < np.mean(r) - x_bar:
-            print("hello")
-            remove_x.append(x[i])
-            remove_y.append(y[i])
+    ind = []
+
+    if (x_bar < 0.2*np.mean(r)):
+        for i in range(len(x)):
+            if r[i] > np.mean(r) + 2*x_bar or r[i] < np.mean(r) - 2*x_bar:
+                print("removed 1")
+                remove_x.append(x[i])
+                remove_y.append(y[i])
+                ind.append(i)
+    else: 
+        for i in range(len(x)):
+            if r[i] > np.mean(r) + x_bar or r[i] < np.mean(r) - x_bar:
+                print("removed 2")
+                remove_x.append(x[i])
+                remove_y.append(y[i])
+                ind.append(i)
     for i in remove_x:
         x.remove(i)
     for i in remove_y:
         y.remove(i)
-    return x, y
+    return x, y, np.delete(ridge_indices, ind, 0), np.delete(ridge_z, ind, 0)
 
 if __name__ ==  '__main__':
     x = [1.1, 1.2, 1.3, 1.4, 1.5, 1000000]
