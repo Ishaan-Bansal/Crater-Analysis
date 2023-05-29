@@ -19,7 +19,7 @@ import pandas as pd
 
 if __name__ == '__main__':
     # Write the relative path to the file you want to load
-    filename = 'Testing/Test Crater Type 2 STLs/r20_d5_c25_t2.stl'
+    filename = 'Lobby/crater_ambient_cropped.stl'
     # filename = "Crater_STL_Files/2022_11_01_50mTorr_h10_1s_032gs_noacrylic.stl"
     # Radius for trimming_package; Effects the normal vector and rotation matrix
     trimRadius = 250
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     # The bounds of the square in which the rays are limited
     bounds = 150
     # The spacing between each ray
-    spacing = 1
+    spacing = 5
     # If the spacing is great, than the resolution of the data is high and vice versa
 
     # mesh = trimesh.load_mesh(filename)
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     mesh.apply_transform(rotation_matrix)
 
     help.move(mesh, lowest_point)
-    # mesh.show()
+    mesh.show()
 
     ray_directions_array = np.array([])
     ray_origins_array = np.array([])
@@ -210,16 +210,16 @@ if __name__ == '__main__':
     x, y = np.array(x), np.array(y)
 
     plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'kx')
-    plt.show()
+    # plt.show()
 
     crater_start = np.mean(ridge_z)
     print("Crater start: ", crater_start)
     a, b, d = 0, 0, crater_start
     plane = help.create_trimesh_plane(a, b, d)
 
-    scene = trimesh.Scene([mesh,
-                           plane])
-    scene.show()
+    # scene = trimesh.Scene([mesh,
+    #                        plane])
+    # scene.show()
 
 
     b = x**2 + y**2
@@ -236,15 +236,15 @@ if __name__ == '__main__':
 
     print("Radius: ", radius)
 
-    # figure, axes = plt.subplots()
-    # Drawing_uncolored_circle = plt.Circle((x_c, y_c), radius, fill=False)
-    # plot = plt.plot(x, y, 'k.', linewidth=2)
+    figure, axes = plt.subplots()
+    Drawing_uncolored_circle = plt.Circle((x_c, y_c), radius, fill=False)
+    plot = plt.plot(x, y, 'k.', linewidth=2)
 
-    # axes.set_xlim(-300, 300)
-    # axes.set_ylim(-300, 300)
-    # axes.add_patch(Drawing_uncolored_circle)
-    # plt.title('Circle')
-    # plt.show()
+    axes.set_xlim(-300, 300)
+    axes.set_ylim(-300, 300)
+    axes.add_patch(Drawing_uncolored_circle)
+    plt.title('Circle Fit')
+    plt.show()
 
     print("Finding Riemmann Sums...")
 
@@ -330,6 +330,9 @@ def crater_properties(mesh):
     double_gradient_norm = np.sqrt(double_gradient[0]**2 + double_gradient[1]**2)
     double_gradient_norm = medfilt2d(double_gradient_norm, kernel_size=17)
 
+    fig = plt.figure()
+    img = plt.imshow(double_gradient_norm, interpolation='none', cmap='turbo')
+
     ridge_indices = []
     ridge_z = []
     radius_x = int(z_locations.shape[0]/2)
@@ -362,6 +365,7 @@ def crater_properties(mesh):
 
     ridge_indices = np.array(ridge_indices)
     ridge_z = np.array(ridge_z)
+    plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'r1')
 
     crater_start = np.mean(ridge_z)
 
@@ -369,7 +373,14 @@ def crater_properties(mesh):
     for i in ridge_indices:
         x.append(x_locations[i[0]][i[1]])
         y.append(y_locations[i[0]][i[1]])
+
+    x, y, ridge_indices, ridge_z = help.remove_outliers(x,y, ridge_indices, ridge_z)
     x, y = np.array(x), np.array(y)
+
+    plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'kx')
+    plt.title('Ridge Detection')
+    plt.savefig("Ridge_Detection.svg")
+
 
     b = x**2 + y**2
     M_a = np.ones((x.size, 3))
@@ -380,6 +391,16 @@ def crater_properties(mesh):
     x_c = sol[0][0]/2
     y_c = sol[0][1]//2
     radius = np.sqrt(sol[0][2] + x_c**2 + y_c**2)
+
+    figure, axes = plt.subplots()
+    Drawing_uncolored_circle = plt.Circle((x_c, y_c), radius, fill=False)
+    plot = plt.plot(x, y, 'k.', linewidth=2)
+
+    axes.set_xlim(-300, 300)
+    axes.set_ylim(-300, 300)
+    axes.add_patch(Drawing_uncolored_circle)
+    plt.title('Circle Fit')
+    plt.savefig("Circle Fit.svg")
 
     mesh_volume = help.crater_volume_tetra(mesh.triangles, radius, crater_start)
 
