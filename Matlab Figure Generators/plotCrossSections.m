@@ -1,4 +1,4 @@
-function plotCrossSections(folder_index, legend_labels)
+function plotCrossSections(folder_index, legend_labels, legend_title, tit)
 
     test_data = strings(8, length(folder_index));
 
@@ -41,7 +41,10 @@ function plotCrossSections(folder_index, legend_labels)
         plot(x_crater, y_crater)
     end
 
-    legend(legend_labels)
+    leg = legend(legend_labels)
+    title(leg, legend_title)
+
+    title(tit)
 
     x0 = 100;
     y0 = 100;
@@ -49,4 +52,6 @@ function plotCrossSections(folder_index, legend_labels)
     height = 400;
     set(gcf, 'position', [x0, y0, width, height])
     set(gca, 'fontname', 'times')
+    saveas(gcf, [tit + '.svg']);
+    saveas(gcf, [tit + '.fig']);
 end

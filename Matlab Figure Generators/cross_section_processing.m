@@ -6,8 +6,8 @@ close all
 %folder_index = [6 9]; %50Torr h3 8.6g/s 0.32g/s
 %folder_index = [5 7]; %50Torr h10 8.6g/s 0.32g/s
 %folder_index = [5 10]; %50mTorr 6Torr h10 8.6g/s
-% folder_index = [8 4]; %50mTorr 6Torr h15 8.6g/s
-folder_index = [1 2 3 4 5 6]
+folder_index = [4 1]; %50mTorr 6Torr h15 8.6g/s
+% folder_index = [12 13 14 15 16 17]
 
 test_data = strings(8,length(folder_index));
 
@@ -56,11 +56,11 @@ plot(x_crater,y_crater)
 end
 
 %legend(test_data(5,:))%6Torr 8.6g/s
-legend('repetion 2','repetion 3','repetion 4','repetion 5','repetion 6','repetion 7') %50Torr h10 8.6g/s
+% legend('repetion 2','repetion 3','repetion 4','repetion 5','repetion 6','repetion 7') %50Torr h10 8.6g/s
 %legend(test_data(5,:)) %50Torr h10 h15 h3 8.6g/s
 %legend('8.60 g/s','0.32 g/s') %50Torr h3 8.6g/s 0.32g/s
 %legend('8.60 g/s','0.32 g/s') %50Torr h10 8.6g/s 0.32g/s
-% legend('50 mTorr','6 Torr') %50mTorr 6Torr h10 8.6g/s
+legend('50 mTorr','6 Torr') %50mTorr 6Torr h10 8.6g/s
 
 x0=100;
 y0=100;
