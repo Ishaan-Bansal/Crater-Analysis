@@ -83,6 +83,24 @@ for i = 1:numel(chamberPressureValues)
         axis([0 width 0 height]);
 
         saveas(gcf, ['Flow Rate (gs) vs Volume; Control Variables - ' titleText '.svg']);
+
+        % Create a new figure for Ridge Height
+        figure;
+        hold on;
+        plot(currentTable.FlowRate_gs_, currentTable.RidgeHeight_mm_, 'bo', 'DisplayName', 'Ridge Height');
+        hold off;
+        
+        % Set plot title and labels for Volume
+        title(titleText);
+        xlabel('Flow Rate (gs)');
+        ylabel('Ridge Height (mm)');
+
+        width = 1.1*max(currentTable.FlowRate_gs_);
+        height_max = 1.1*max(currentTable.RidgeHeight_mm_);
+        height_min = 0.9*min(currentTable.RidgeHeight_mm_);
+        axis([0 width height_min height_max]);
+
+        saveas(gcf, ['Flow Rate (gs) vs Ridge Height; Control Variables - ' titleText '.svg']);
         
     end
 end
@@ -171,6 +189,23 @@ for i = 1:numel(chamberPressureValues)
 
         saveas(gcf, ['Nozzle Height (hD) vs Volume; Control Variables  - ' titleText '.svg']);
 
+         % Create a new figure for Ridge Height
+        figure;
+        hold on;
+        plot(currentTable.NozzleHeight_h_D_, currentTable.RidgeHeight_mm_, 'bo', 'DisplayName', 'Ridge Height');
+        hold off;
+        
+        % Set plot title and labels for Volume
+        title(titleText);
+        xlabel('Nozzle Height (h/D)');
+        ylabel('Ridge Height (mm)');
+
+        width = 1.1*max(currentTable.NozzleHeight_h_D_);
+        height_max = 1.1*max(currentTable.RidgeHeight_mm_);
+        height_min = 0.9*min(currentTable.RidgeHeight_mm_);
+        axis([0 width height_min height_max]);
+
+        saveas(gcf, ['Nozzle Height (hD) vs Ridge Height; Control Variables - ' titleText '.svg']);
     end
 end
 
@@ -257,7 +292,24 @@ for i = 1:numel(nozzleHeightValues)
         axis([0 width 0 height]);
 
         saveas(gcf, ['Chamber Pressure (mTorr) vs Volume; Control Variables - ' titleText '.svg']);
+
+        % Create a new figure for Ridge Height
+        figure;
+        hold on;
+        plot(currentTable.ChamberPressure_mTorr_, currentTable.RidgeHeight_mm_, 'bo', 'DisplayName', 'Ridge Height');
+        hold off;
         
+        % Set plot title and labels for Volume
+        title(titleText);
+        xlabel('Chamber Pressure (mTorr)');
+        ylabel('Ridge Height (mm)');
+
+        width = 1.1*max(currentTable.ChamberPressure_mTorr_);
+        height_max = 1.1*max(currentTable.RidgeHeight_mm_);
+        height_min = 0.9*min(currentTable.RidgeHeight_mm_);
+        axis([0 width height_min height_max]);
+
+        saveas(gcf, ['Chamber Pressure (mTorr) vs Ridge Height; Control Variables - ' titleText '.svg']);        
     end
 end
 
