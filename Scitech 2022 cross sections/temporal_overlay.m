@@ -1,4 +1,11 @@
-savePath = "Crater 1 Slices"
+% lunar_032gs_3hD_MGS
+% lunar_032gs_3hD_TRI
+% lunar_032gs_10hD_MGS
+% martian_032gs_10hD_MGS
+% martian_86gs_10hD_MGS
+% martian_86gs_10hD_MDS
+
+savePath = "lunar_032gs_3hD_TRI Slices"
 
 % Sort the image files based on frame number for video creation
 sortedImageFiles = dir(fullfile(savePath, '*.csv'));
@@ -31,7 +38,8 @@ hold off;
 
 % Create a legend
 legendCell = cell(numel(sortedImageFiles), 1);
-for i = 1:40:numel(sortedImageFiles)
+step = int8(numel(sortedImageFiles) / 5);
+for i = 1:step:numel(sortedImageFiles)
     [~, imageName, ~] = fileparts(sortedImageFiles(i).name);
     if ~isempty(imageName) % Filter out empty filenames
         legendCell{i} = string(imageName); % Convert the filename to string scalar
