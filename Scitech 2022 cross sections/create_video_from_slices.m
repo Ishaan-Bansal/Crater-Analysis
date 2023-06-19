@@ -1,4 +1,4 @@
-savePath = "lunar_032gs_3hD_TRI Slices"
+savePath = "v2\martian_032gs_10hD_MGB Slices"
 
 % Sort the image files based on frame number for video creation
 sortedImageFiles = dir(fullfile(savePath, 'plot_*.jpg'));
@@ -7,7 +7,7 @@ frameNumbers = cellfun(@(x) str2double(x{1}), frameNumbers);
 [~, sortedIndices] = sort(frameNumbers);
 sortedImageFiles = sortedImageFiles(sortedIndices);
 
-video = VideoWriter('lunar_032gs_3hD_TRI.avi'); % Create the video object
+video = VideoWriter('martian_032gs_10hD_MGB.avi'); % Create the video object
 open(video); % Open the file for writing
 
 % Loop through each sorted image file and write to the video

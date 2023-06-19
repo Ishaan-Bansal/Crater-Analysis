@@ -6,9 +6,10 @@
 % martian_86gs_10hD_MGS
 
 % Specify the folder path containing the images
-folderPath = 'martian_86gs_10hD_MGS';
-savePath = "martian_86gs_10hD_MGS Slices"
-origin = [230.75 34.25]
+folderPath = 'v2\martian_032gs_10hD_MGB';
+savePath = "v2\martian_032gs_10hD_MGB Slices"
+origin = [302.75 37.25]
+height = 82
 
 % Get a list of all image files in the folder
 imageFiles = dir(fullfile(folderPath, '*.jpg')); % Update the file extension as per your image format
@@ -21,7 +22,7 @@ for i = 1:numel(imageFiles)
     disp(imagePath)
     
     % Call the function to extract the edge coordinates
-    [xCoordinates, yCoordinates] = extractEdge(image, 110);
+    [xCoordinates, yCoordinates] = extractEdge(image, height);
     yCoordinates = - yCoordinates
     
     xCoordinates = xCoordinates - origin(1)
@@ -35,7 +36,7 @@ for i = 1:numel(imageFiles)
     
     % Plot the x and y coordinates
     figure;
-    plot(xCoordinates, yCoordinates);
+    plot(xCoordinates, yCoordinates, 'k.');
     axis equal;
     
     % Save the plot as an image

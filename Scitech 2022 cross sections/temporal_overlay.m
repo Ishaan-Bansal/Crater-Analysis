@@ -5,7 +5,7 @@
 % martian_86gs_10hD_MGS
 % martian_86gs_10hD_MDS
 
-savePath = "lunar_032gs_3hD_TRI Slices"
+savePath = "v2\martian_032gs_10hD_MGB Slices"
 
 % Sort the image files based on frame number for video creation
 sortedImageFiles = dir(fullfile(savePath, '*.csv'));
@@ -20,12 +20,13 @@ hold on;
 colors = jet(numel(sortedImageFiles)); % Generate a colormap for the frames
 
 % Loop through each sorted image file and plot the overlay
-for i = 1:40:numel(sortedImageFiles)
+step = floor(numel(sortedImageFiles) / 5);
+for i = 1:step:numel(sortedImageFiles)
     imagePath = fullfile(savePath, sortedImageFiles(i).name);
     data = csvread(imagePath);
     x = data(:, 1);
     y = data(:, 2);
-    plot(x, y, '-', 'Color', colors(i, :));
+    plot(x, y, '.', 'Color', colors(i, :));
 end
 
 x0 = 100;
@@ -38,7 +39,6 @@ hold off;
 
 % Create a legend
 legendCell = cell(numel(sortedImageFiles), 1);
-step = int8(numel(sortedImageFiles) / 5);
 for i = 1:step:numel(sortedImageFiles)
     [~, imageName, ~] = fileparts(sortedImageFiles(i).name);
     if ~isempty(imageName) % Filter out empty filenames

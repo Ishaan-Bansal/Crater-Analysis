@@ -1,5 +1,15 @@
+% lunar_032gs_3hD_MGS
+% lunar_032gs_3hD_TRI
+% lunar_032gs_10hD_MGS
+% martian_032gs_10hD_MGS
+% martian_86gs_10hD_MDS
+% martian_86gs_10hD_MGS
+
+% lunar_032gs_10hD_MDS
+% martian_032gs_10hD_MGB
+
 % Load the image
-image = imread('martian_86gs_10hD_MGS/Image1.jpg'); % Replace 'your_image.jpg' with the path to your image
+image = imread(['v2\martian_032gs_10hD_MGB/Image201.jpg']); % Replace 'your_image.jpg' with the path to your image
 
 % Display the image
 imshow(image);
