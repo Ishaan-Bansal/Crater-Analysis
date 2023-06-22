@@ -53,6 +53,27 @@ axis([x0 width y0 height]);
 
 hold off;
 
+
+% TO INSERT SPECIFIC IMAGE, SET FRAME NUMBER
+
+frameNumber = 1;
+
+imagePath = fullfile(savePath, sortedImageFiles(frameNumber.name);
+data = csvread(imagePath);
+x = data(:, 1);
+y = data(:, 2);
+plot(x, y, '.', 'Color', colors(frameNumber, :));
+
+x0 = 100;
+y0 = -800;
+width = 1600;
+height = 200;
+axis([x0 width y0 height]);
+
+hold off;
+
+% DONE
+
 % Create a legend
 legendCell = cell(numel(sortedImageFiles), 1);
 for i = 1:step:numel(sortedImageFiles)
@@ -65,5 +86,15 @@ end
 if ~isempty(imageName) % Filter out empty filenames
     legendCell{numel(sortedImageFiles)} = string(imageName); % Convert the filename to string scalar
 end
+
+
+% SPECIFIC FRAME LEGEND
+[~, imageName, ~] = fileparts(sortedImageFiles(frameNumber.name);
+if ~isempty(imageName) % Filter out empty filenames
+    legendCell{frameNumber} = string(imageName); % Convert the filename to string scalar
+end
+
+% DONE
+
 legendCell = legendCell(~cellfun('isempty', legendCell)); % Remove empty cells
 legend(legendCell, 'Location', 'best');
