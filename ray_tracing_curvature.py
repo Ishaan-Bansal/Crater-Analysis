@@ -19,14 +19,13 @@ import pandas as pd
 
 if __name__ == '__main__':
     # Write the relative path to the file you want to load
-    filename = 'Lobby/crater_ambient_cropped.stl'
-    # filename = "Crater_STL_Files/2022_11_01_50mTorr_h10_1s_032gs_noacrylic.stl"
+    filename = 'Testing/Test Craters STLs/r40_d.stl'
     # Radius for trimming_package; Effects the normal vector and rotation matrix
     trimRadius = 250
     # Radius for trimming the mesh around a point; Effects the histogram and slice
     displayRadius = 250
     # The bounds of the square in which the rays are limited
-    bounds = 150
+    bounds = 75
     # The spacing between each ray
     spacing = 5
     # If the spacing is great, than the resolution of the data is high and vice versa
@@ -103,7 +102,7 @@ if __name__ == '__main__':
 
     double_gradient = np.gradient(gradient_norm)
     double_gradient_norm = np.sqrt(double_gradient[0]**2 + double_gradient[1]**2)
-    double_gradient_norm = medfilt2d(double_gradient_norm, kernel_size=17)
+    # double_gradient_norm = medfilt2d(double_gradient_norm, kernel_size=17)
 
     DF = pd.DataFrame(z_locations)
     DF.to_csv("data4.csv", header=False, index=False)
@@ -130,6 +129,7 @@ if __name__ == '__main__':
 
     fig = plt.figure()
     img = plt.imshow(double_gradient_norm, interpolation='none', cmap='turbo')
+    cbar = plt.colorbar(img)
 
     # # Detect circles of different radii
     # hough_radii = np.arange(20, 150, 5)
@@ -221,6 +221,8 @@ if __name__ == '__main__':
     #                        plane])
     # scene.show()
 
+    
+
 
     b = x**2 + y**2
     M_a = np.ones((x.size, 3))
@@ -280,14 +282,17 @@ if __name__ == '__main__':
 
     # help.cut_top(mesh, crater_start)
     # mesh.show()
-    info = f"Depth: {crater_start} , Diameter: {radius*2} , Volume: {point_mesh_volume}"
+    n, bins, patches = plt.hist(
+    mesh.vertices[:,2], bins=300, density=True, facecolor='b', alpha=0.75)
+    depth = bins[n.argmax()]
+    ridge_height = crater_start - depth
+    info = f"Depth: {depth} , Diameter: {radius*2} , Volume: {point_mesh_volume}, Ridge Height: {ridge_height}, Crater Start: {crater_start}"
     print(info)
 
 
-def crater_properties(mesh):
-    # The bounds of the square in which the rays are limited
-    bounds = 150
-    # The spacing between eachqq ray
+def crater_properties(mesh, bounds):
+    # Bounds: Half the lenght of the square in which the rays are limited
+    # The spacing between each ray
     spacing = 1
 
     ray_directions_array = np.array([])
@@ -332,6 +337,7 @@ def crater_properties(mesh):
 
     fig = plt.figure()
     img = plt.imshow(double_gradient_norm, interpolation='none', cmap='turbo')
+    cbar = plt.colorbar(img)
 
     ridge_indices = []
     ridge_z = []
@@ -380,7 +386,7 @@ def crater_properties(mesh):
     plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'kx')
     plt.title('Ridge Detection')
     plt.savefig("Ridge_Detection.svg")
-
+    plt.close()
 
     b = x**2 + y**2
     M_a = np.ones((x.size, 3))
@@ -401,7 +407,12 @@ def crater_properties(mesh):
     axes.add_patch(Drawing_uncolored_circle)
     plt.title('Circle Fit')
     plt.savefig("Circle Fit.svg")
+    plt.close()
 
     mesh_volume = help.crater_volume_tetra(mesh.triangles, radius, crater_start)
 
-    return crater_start, 2*radius, mesh_volume
+    n, bins, patches = plt.hist(
+    mesh.vertices[:,2], bins=300, density=True, facecolor='b', alpha=0.75)
+    depth = bins[n.argmax()]
+    ridge_height = crater_start - depth
+    return depth, 2*radius, mesh_volume, ridge_height

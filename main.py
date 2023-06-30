@@ -9,10 +9,11 @@ import helper_functions as help
 import numpy as np
 import pandas as pd
 
-# df = pd.DataFrame()
+columns = ['ID', 'Depth', 'Diameter', 'Volume', 'Ridge Height']
+df = pd.DataFrame(columns=columns)
 
 # Write the relative path to the folder you want to load
-path = "Crater_STL_Initial_Dataset"
+path = "Lab Craters\Combined STLs"
 cwd = os.getcwd()
 os.chdir(path)
 for filename in os.listdir():
@@ -20,40 +21,18 @@ for filename in os.listdir():
         continue
     print("Working on: " + filename)
 
-    mesh = help.load_mesh(filename)
-
-    # angle = np.pi/2*0
-    # direction = [1, 0, 0]
-    # center = [0, 0, 0]
-
-    # rot_matrix = trimesh.transformations.rotation_matrix(angle, direction, center)
-
-    # mesh.apply_transform(rot_matrix)
+    mesh = help.load_mesh(filename, trimRadius=250, displayRadius=250)
     
     filename = filename[:-4]
-
-    # radius_row, depth_col = help.from_filename(filename)
-
-    # if depth_col not in df.columns:
-    #     df[depth_col] = pd.Series(dtype=object)
-    # if not df.index.isin([radius_row]).any():
-    #     df.loc[radius_row] = [str()] * len(df.columns) 
-
+    
     os.chdir(cwd)
-    os.chdir("Initial_Dataset_MedianFilter")
+    os.chdir("Lab Craters\Combined Results")
     os.mkdir(filename)
     os.chdir(filename)
 
-    depth, diameter, volume = rtc.crater_properties(mesh)
+    depth, diameter, volume, ridge_height = rtc.crater_properties(mesh, bounds=150)
 
-    file = open(filename + ".txt", 'w')
-    info = f"Depth: {depth} , Diameter: {diameter} , Volume: {volume}"
-    file.write(info)
-    file.close()
-
-    # df.loc[radius_row, depth_col] = info
-
-    if int(depth/10) > 0:
+    if int(depth/10) > 0:        
         for z in range(int(depth/10), int(depth), int(depth/10)):
             locations = rtz.z_slice(mesh, z)
             figz = plt.figure()
@@ -85,11 +64,18 @@ for filename in os.listdir():
     plt.close()
     np.savetxt(filename + "_X-Slice" + ".csv", locations2, delimiter=',')
 
+    file = open(filename + ".txt", 'w')
+    info = f"Depth: {depth} , Diameter: {diameter} , Volume: {volume}, Ridge Height: {ridge_height}"
+    file.write(info)
+    file.close()
+
+    new_row = {'ID' : filename, 'Depth' : depth, 'Diameter' : diameter, 'Volume' : volume, 'Ridge Height' : ridge_height}
+    df.loc[len(df)] = new_row
 
     os.chdir(cwd)
     os.chdir(path)
 
 os.chdir(cwd)
-# df.to_csv("Crater_Properties/test_craters.csv")
+df.to_csv("Lab Craters\Combined Results/analysis.csv")
 
 print("Finished")

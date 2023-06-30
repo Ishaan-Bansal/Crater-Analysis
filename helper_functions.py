@@ -3,7 +3,9 @@ import numpy as np
 import trimesh
 import statistics as stats
 import math
-
+import sympy as sp
+import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d
 
 # def mesh_to_vectors(mesh): # Archived
 #     # Convert mesh to vertices of the trianglar faces
@@ -33,13 +35,18 @@ import math
 
 #     return vectorsOut
 
-# Check if a given point is within the given radius from the given point
+# Check if a given point is within the given spherical radius from the given point
 def withinBounds(point1, centroid, radius):
     point = pointsToPoint(point1)  # Convert N-9 point to N-3 point
     vector = point - centroid  # Distance between point and centroid
     # Return boolean whether the distance is within the radius
     return np.linalg.norm(vector) < radius
 
+# Check if a given point is within the given circular radius from the given point
+def withinCircularRadius(point, centroid, radius):
+    vector = point - centroid  # Distance between point and centroid
+    # Return boolean whether the distance is within the radius
+    return np.sqrt(vector[0]**2+vector[1]**2) < radius
 
 # Trim a circle around the centroid of the numpy.stl mesh
 def trimCircle(mesh, radius):
@@ -387,11 +394,9 @@ def crater_volume_tetra(mesh_triangles, radius, crater_start):
     return volume
 
 
-def load_mesh(filename):
-    # Radius for trimming_package; Effects the normal vector and rotation matrix
-    trimRadius = 250
-    # Radius for trimming the mesh around a point; Effects the histogram and slice
-    displayRadius = 250
+def load_mesh(filename, trimRadius, displayRadius):
+    # trimRadius: Radius for trimming_package; Effects the normal vector and rotation matrix
+    # displayRadius: Radius for trimming the mesh around a point; Effects the histogram and slice
 
     normal_vector, lowest_point, rotation_matrix, rotation_matrix_point = trimming_package(
         filename, trimRadius)
@@ -482,14 +487,12 @@ def remove_outliers(x , y, ridge_indices, ridge_z):
     if (x_bar < 0.2*np.mean(r)):
         for i in range(len(x)):
             if r[i] > np.mean(r) + 2*x_bar or r[i] < np.mean(r) - 2*x_bar:
-                print("removed 1")
                 remove_x.append(x[i])
                 remove_y.append(y[i])
                 ind.append(i)
     else: 
         for i in range(len(x)):
             if r[i] > np.mean(r) + x_bar or r[i] < np.mean(r) - x_bar:
-                print("removed 2")
                 remove_x.append(x[i])
                 remove_y.append(y[i])
                 ind.append(i)
@@ -499,8 +502,103 @@ def remove_outliers(x , y, ridge_indices, ridge_z):
         y.remove(i)
     return x, y, np.delete(ridge_indices, ind, 0), np.delete(ridge_z, ind, 0)
 
+def radius_of_curvature(arr, depth):
+    x, y = arr[:,0] , arr[:,2]
+
+    # mask1 = -diameter/2 < x
+    # mask2 = diameter/2 > x
+    mask1 = -depth < y
+    mask2 = depth > y
+    mask = []
+    for i in range(len(x)):
+        mask.append(mask1[i] and mask2[i])
+
+    x, y = x[mask], y[mask]
+
+    b = x**2 + y**2
+    M_a = np.ones((x.size, 3))
+    M_a[:, 0] = x
+    M_a[:, 1] = y
+    sol = np.linalg.lstsq(M_a, b, rcond=None)
+
+    x_c = sol[0][0]/2
+    y_c = sol[0][1]//2
+    radius = np.sqrt(sol[0][2] + x_c**2 + y_c**2)
+    return radius
+
+def radius_of_sphere(depth, diameter):
+    r = sp.symbols('r')
+    eq1 = sp.Eq( (diameter/2)**2 + (r - depth)**2, r**2)
+    return sp.solve(eq1, r)
+
+def sphereFit(mesh, radius, depth, R):
+    arr = []
+    for i in mesh.vertices:
+        if i[2] < depth and withinCircularRadius(i, np.array([0,0,0]), radius): 
+            arr.append(i)
+    arr = np.array(arr)
+    r, cx, cy, cz = sFit(arr)
+    center = np.array([cx, cy,int(R)])
+    errorarr = []
+    for i in arr:
+        error = np.linalg.norm(i-center) - R 
+        errorarr.append(error)
+    # fig = plt.figure()
+    # ax3D = fig.add_subplot(projection='3d')
+    # ax3D.scatter(arr[:,0], arr[:,1], arr[:,2])  
+    # u, v = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
+    # x=np.cos(u)*np.sin(v)*R
+    # y=np.sin(u)*np.sin(v)*R
+    # z=np.cos(v)*R
+    # x = x + cx
+    # y = y + cy
+    # z = z + (R)
+    # ax3D.plot_wireframe(x, y, z, color="r")
+    # ax3D.set_aspect('equal')
+    # ax3D.set_zlim3d(-20,100)
+    # plt.show()
+    return r, cx, cy, cz, np.mean(errorarr)
+
+def sFit(arr):
+    #   Assemble the A matrix
+    spX = arr[:,0]
+    spY = arr[:,1]
+    spZ = arr[:,2]
+    A = np.zeros((len(spX),4))
+    A[:,0] = spX*2
+    A[:,1] = spY*2
+    A[:,2] = spZ*2
+    A[:,3] = 1
+
+    #   Assemble the f matrix
+    f = np.zeros((len(spX),1))
+    f[:,0] = (spX*spX) + (spY*spY) + (spZ*spZ)
+    C, residules, rank, singval = np.linalg.lstsq(A,f, rcond=None)
+
+    #   solve for the radius
+    t = (C[0]*C[0])+(C[1]*C[1])+(C[2]*C[2])+C[3]
+    radius = math.sqrt(t)
+
+    return radius, C[0], C[1], C[2]
+
 if __name__ ==  '__main__':
-    x = [1.1, 1.2, 1.3, 1.4, 1.5, 1000000]
-    y = [1.1, 1.2, 1.3, 1.4, 1.5, 1000000]
-    x, y = remove_outliers(x,y)
-    print(x, y)
+    filename = "Testing/Foam Sphere STLS Post Proccessed/4 June 2023/04_06_2023_run1_scan1.stl"
+    mesh = load_mesh(filename,100,100)
+    r, x0, y0, z0, err = sphereFit(mesh, radius=81.49416854901347/2, depth=8.065528520377779, R=74.93)
+    print(r)
+    print(x0,y0,z0)
+    print(err)
+    # fig = plt.figure()
+    # ax3D = fig.add_subplot(projection='3d')
+    # ax3D.scatter(mesh.vertices[:,0], mesh.vertices[:,1], mesh.vertices[:,2])  
+    # u, v = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
+    # x=np.cos(u)*np.sin(v)*r
+    # y=np.sin(u)*np.sin(v)*r
+    # z=np.cos(v)*r
+    # x = x + x0
+    # y = y + y0
+    # z = z + (74.93-8.065528520377779)
+    # ax3D.plot_wireframe(x, y, z, color="r")
+    # ax3D.set_aspect('equal')
+    # ax3D.set_zlim3d(-20,100)
+    # plt.show()
