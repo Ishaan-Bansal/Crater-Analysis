@@ -15,7 +15,7 @@
 % martian_86gs_10hD_MDS
 % martian_86gs_10hD_MGB
 
-savePath = "v2\martian_86gs_10hD_MDS Slices"
+savePath = "v2\lunar_032gs_10hD_MDS Slices"
 
 % Sort the image files based on frame number for video creation
 sortedImageFiles = dir(fullfile(savePath, '*.csv'));
@@ -27,7 +27,7 @@ sortedImageFiles = sortedImageFiles(sortedIndices);
 figure;
 hold on;
 
-colors = jet(numel(sortedImageFiles)); % Generate a colormap for the frames
+colors = flipud(bone(numel(sortedImageFiles))); % Generate a colormap for the frames
 
 % Loop through each sorted image file and plot the overlay
 step = floor(numel(sortedImageFiles) / 4);
@@ -56,21 +56,21 @@ hold off;
 
 % TO INSERT SPECIFIC IMAGE, SET FRAME NUMBER
 
-frameNumber = 1;
-
-imagePath = fullfile(savePath, sortedImageFiles(frameNumber.name);
-data = csvread(imagePath);
-x = data(:, 1);
-y = data(:, 2);
-plot(x, y, '.', 'Color', colors(frameNumber, :));
-
-x0 = 100;
-y0 = -800;
-width = 1600;
-height = 200;
-axis([x0 width y0 height]);
-
-hold off;
+% frameNumber = 1;
+% 
+% imagePath = fullfile(savePath, sortedImageFiles(frameNumber).name);
+% data = csvread(imagePath);
+% x = data(:, 1);
+% y = data(:, 2);
+% plot(x, y, '.', 'Color', colors(frameNumber, :));
+% 
+% x0 = 100;
+% y0 = -800;
+% width = 1600;
+% height = 200;
+% axis([x0 width y0 height]);
+% 
+% hold off;
 
 % DONE
 
@@ -89,10 +89,10 @@ end
 
 
 % SPECIFIC FRAME LEGEND
-[~, imageName, ~] = fileparts(sortedImageFiles(frameNumber.name);
-if ~isempty(imageName) % Filter out empty filenames
-    legendCell{frameNumber} = string(imageName); % Convert the filename to string scalar
-end
+% [~, imageName, ~] = fileparts(sortedImageFiles(frameNumber).name);
+% if ~isempty(imageName) % Filter out empty filenames
+%     legendCell{frameNumber} = string(imageName); % Convert the filename to string scalar
+% end
 
 % DONE
 

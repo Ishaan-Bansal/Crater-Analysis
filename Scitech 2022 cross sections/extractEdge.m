@@ -1,6 +1,6 @@
 function [x,y] = extractEdge(I, thresh, extMask)
 I = imadjustn(I);
-BW = im2bw(I, 0.5);
+BW = im2bw(I, 0.525);
 BW = medfilt2(BW,[5 5]);
 
 % imshow(BW);

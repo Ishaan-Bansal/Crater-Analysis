@@ -16,7 +16,7 @@
 % martian_86gs_10hD_MGB
 
 % Load the image
-image = imread(['v2\martian_86gs_10hD_MGB/Image201.jpg']); % Replace 'your_image.jpg' with the path to your image
+image = imread(['Scitech Final Craters/lunar_032gs_3hD_MGB.png']); % Replace 'your_image.jpg' with the path to your image
 
 % Display the image
 imshow(image);
