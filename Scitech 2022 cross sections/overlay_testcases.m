@@ -11,8 +11,8 @@
 % https://uofi.box.com/s/pses8c44c54httvdzzirkp7zefxzzvc9
 
 % Read the CSV files
-filename1 = "v2\lunar_032gs_10hD_MDS Slices/Image31";
-filename2 = "lab tests/11_01_2022_50mTorr_10hD_032gs_X-Slice";
+filename1 = "v2\lunar_032gs_3hD_MGB Slices/Image31";
+filename2 = "lab tests/11_01_2022_50mTorr_3hD_032gs_X-Slice";
 data1 = readmatrix(filename1 + '.csv');
 data2 = readmatrix(filename2 + '.csv');
 

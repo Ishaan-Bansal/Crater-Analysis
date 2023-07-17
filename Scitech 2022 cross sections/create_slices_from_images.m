@@ -16,8 +16,8 @@
 % martian_86gs_10hD_MGB
 
 % Specify the folder path containing the images
-folderPath = 'v2\martian_86gs_10hD_MGB/edge case';
-savePath = "v2/martian_86gs_10hD_MGB Slices";
+folderPath = 'v2\lunar_032gs_3hD_MGB';
+savePath = "v2/lunar_032gs_3hD_MGB Slices";
 origin = [374.75 28.25];
 height = 85;
 
