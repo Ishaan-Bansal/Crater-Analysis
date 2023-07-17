@@ -30,7 +30,7 @@ for i = 1:numel(imageFiles)
     imagePath = fullfile(folderPath, imageFiles(i).name);
     image = imread(imagePath); 
 
-    [i2 mask] = removeRedDot(image);
+    [i2, mask] = removeRedDot(image);
     
     % Call the function to extract the edge coordinates
     [xCoordinates, yCoordinates] = extractEdge(i2, height, mask);
