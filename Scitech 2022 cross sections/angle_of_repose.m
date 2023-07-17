@@ -1,7 +1,7 @@
 one = false;
 
 if (one)
-    img_path = "Scitech Final Craters/lunar_032gs_3hD_MGB.png";
+    img_path = "Scitech Final Craters/martian_86gs_10hD_MGB.png";
 
     img = imread(img_path);
     
@@ -36,10 +36,8 @@ else
 
     x = data(:,1);
     y = data(:,3);
-
-%     [~, ind] = max(y);
-%     
-    ind = find(y, 12, "last");
+    
+    ind = find(y, 12, "last"); % Change value according to ridge
     mask = x < x(ind(1));
     
     x(mask) = [];
