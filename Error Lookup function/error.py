@@ -1,3 +1,6 @@
+# Interpolate error due to analyis in mm
+
+
 import pandas as pd
 import numpy as np
 from scipy.interpolate import griddata
@@ -66,5 +69,7 @@ def on_csv(filename):
     err_df.to_csv("Lab Craters\Combined Results/errors.csv")
     print("File Generated")
 
-file = "Lab Craters\Combined Results/analysis.csv"
-on_csv(file)
+# file = "Lab Craters\Combined Results/analysis.csv"
+# on_csv(file)
+
+linear_interpolation(20, 30)
