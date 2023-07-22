@@ -61,8 +61,12 @@ def on_csv(filename):
         dia = row["Diameter"]
         if dep < 5:
             dep = 5
+        elif dep > 35:
+            dep = 35
         if dia < 40:
             dia = 40
+        elif dia > 240:
+            dia = 240
         depth, diameter, volume = linear_interpolation(dep, dia)
         err_df.loc[index, "Depth"], err_df.loc[index, "Diameter"], err_df.loc[index, "Volume"] = depth, diameter, volume
         err_df.loc[index, "Ridge Height"] = depth

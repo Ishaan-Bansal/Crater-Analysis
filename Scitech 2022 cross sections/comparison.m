@@ -42,7 +42,7 @@ yData1 = data1(:, 2);
 [xData1, yData1] = convertPixelsToMM_2(xData1, yData1);
 
 yData1 = yData1 + 110;
-xData1 = xData1 - 270;
+xData1 = xData1 - 302;
 
 xData1ab = data1ab(:, 1);
 yData1ab = data1ab(:, 2);
@@ -99,6 +99,7 @@ pc.Color = [0.9 0.9 0.9];
 plot(xData2, yData2, 'r.', 'DisplayName', filename2);
 xlabel('X');
 ylabel('Y');
+clear title;
 title('Comparison of UIUC and MSFC data');
 l = legend('Location', 'best');
 set(l, 'Interpreter', 'none')

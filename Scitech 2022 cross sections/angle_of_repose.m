@@ -1,4 +1,4 @@
-one = false;
+one = true;
 
 if (one)
     img_path = "Scitech Final Craters/martian_86gs_10hD_MGB.png";
@@ -28,16 +28,16 @@ if (one)
     figure;
     plot(interpolatedX, interpolatedY, 'b-', 'LineWidth', 3);
     ang = atan(coeffs(1));
-    disp(ang);
+    disp(rad2deg(ang));
 else
-    csv = "Scitech Final Craters/2022_11_01_50mTorr_h3_1s_032gs_noacrylic_X-Slice.csv";
+    csv = "lab tests\03_10_2023_6Torr_10hD_86gs_2_X-Slice.csv";
 
     data = readmatrix(csv);
 
     x = data(:,1);
     y = data(:,3);
     
-    ind = find(y, 12, "last"); % Change value according to ridge
+    ind = find(y, 21, "last"); % Change value according to ridge
     mask = x < x(ind(1));
     
     x(mask) = [];
@@ -60,5 +60,5 @@ else
     figure;    
     plot(interpolatedX, interpolatedY, 'b-', 'LineWidth', 3);
     ang = atan(coeffs(1));
-    disp(ang);
+    disp(rad2deg(ang));
 end
