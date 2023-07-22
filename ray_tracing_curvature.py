@@ -19,15 +19,15 @@ import pandas as pd
 
 if __name__ == '__main__':
     # Write the relative path to the file you want to load
-    filename = 'Testing/Test Craters STLs/r40_d.stl'
+    filename = 'Lab Craters\Batch Two STLs\crater01_03_09_2022.stl'
     # Radius for trimming_package; Effects the normal vector and rotation matrix
     trimRadius = 250
     # Radius for trimming the mesh around a point; Effects the histogram and slice
     displayRadius = 250
     # The bounds of the square in which the rays are limited
-    bounds = 75
+    bounds = 150
     # The spacing between each ray
-    spacing = 5
+    spacing = 2
     # If the spacing is great, than the resolution of the data is high and vice versa
 
     # mesh = trimesh.load_mesh(filename)
@@ -188,7 +188,7 @@ if __name__ == '__main__':
     ridge_z = np.array(ridge_z)
     print(ridge_indices)
     # plt.figure(5)
-    plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'r1')
+    # plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'r1')
     # plt.show()
 
     # size = ridge_indices.shape[0]
@@ -209,7 +209,7 @@ if __name__ == '__main__':
     
     x, y = np.array(x), np.array(y)
 
-    plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'kx')
+    # plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'kx')
     # plt.show()
 
     crater_start = np.mean(ridge_z)
