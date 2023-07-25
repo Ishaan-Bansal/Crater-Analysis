@@ -5,10 +5,9 @@ close all
 % folder_index = [3 5]; %50Torr h10 8.6g/s
 %folder_index = [6 9]; %50Torr h3 8.6g/s 0.32g/s
 %folder_index = [5 7]; %50Torr h10 8.6g/s 0.32g/s
-% folder_index = [5 10]; %50mTorr 6Torr h10 8.6g/s
-% folder_index = [4 1]; %50mTorr 6Torr h15 8.6g/s
+%folder_index = [5 10]; %50mTorr 6Torr h10 8.6g/s
+folder_index = [4]; %50mTorr 6Torr h15 8.6g/s
 % folder_index = [12 13 14 15 16 17]
-folder_index = [9 13]
 
 test_data = strings(8,length(folder_index));
 
@@ -53,7 +52,7 @@ y_crater = A(:,3);
 y_crater = y_crater(index_sort);
 y_crater = y_crater - y_crater(1);
 
-plot(x_crater,y_crater, LineWidth=4)
+plot(x_crater,y_crater, LineWidth=2)
 end
 
 %legend(test_data(5,:))%6Torr 8.6g/s
@@ -61,8 +60,7 @@ end
 %legend(test_data(5,:)) %50Torr h10 h15 h3 8.6g/s
 %legend('8.60 g/s','0.32 g/s') %50Torr h3 8.6g/s 0.32g/s
 %legend('8.60 g/s','0.32 g/s') %50Torr h10 8.6g/s 0.32g/s
-% legend('50 mTorr','6 Torr') %50mTorr 6Torr h10 8.6g/s
-legend('Lunar VE', 'Martian BCF')
+legend('50 mTorr','6 Torr') %50mTorr 6Torr h10 8.6g/s
 
 x0=100;
 y0=100;

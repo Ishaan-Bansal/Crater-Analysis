@@ -36,9 +36,8 @@ for i = 1:numel(chamberPressureValues)
         % Create separate plots for Depth, Diameter, and Volume against FlowRate
         figure;
         hold on;
-        grid on;
         plot(currentTable.FlowRate_gs_, currentTable.Depth_mm_, 'ro', 'DisplayName', 'Depth');
-        errorbar(currentTable.FlowRate_gs_, currentTable.Depth_mm_,currentTable.DepthError_mm_, "ro");
+        errorbar(currentTable.FlowRate_gs_, currentTable.Depth_mm_,currentTable.DepthError_mm_, "o");
         hold off;
         
         % Set plot title and labels for Depth
@@ -55,9 +54,8 @@ for i = 1:numel(chamberPressureValues)
         % Create a new figure for Diameter
         figure;
         hold on;
-        grid on;
         plot(currentTable.FlowRate_gs_, currentTable.Diameter_mm_, 'mo', 'DisplayName', 'Diameter');
-        errorbar(currentTable.FlowRate_gs_, currentTable.Diameter_mm_,currentTable.DiameterError_mm_, "mo");
+        errorbar(currentTable.FlowRate_gs_, currentTable.Diameter_mm_,currentTable.DiameterError_mm_, "o");
         hold off;
         
         % Set plot title and labels for Diameter
@@ -74,9 +72,8 @@ for i = 1:numel(chamberPressureValues)
         % Create a new figure for Volume
         figure;
         hold on;
-        grid on;
         plot(currentTable.FlowRate_gs_, currentTable.Volume_mm_3_, 'bo', 'DisplayName', 'Volume');
-        errorbar(currentTable.FlowRate_gs_, currentTable.Volume_mm_3_,currentTable.VolumeError_mm_3_, "bo");
+        errorbar(currentTable.FlowRate_gs_, currentTable.Volume_mm_3_,currentTable.VolumeError_mm_3_, "o");
         hold off;
         
         % Set plot title and labels for Volume
@@ -93,9 +90,8 @@ for i = 1:numel(chamberPressureValues)
         % Create a new figure for Ridge Height
         figure;
         hold on;
-        grid on;
-        plot(currentTable.FlowRate_gs_, currentTable.RidgeHeight_mm_, 'ko', 'DisplayName', 'Ridge Height');
-        errorbar(currentTable.FlowRate_gs_, currentTable.RidgeHeight_mm_,currentTable.RidgeHeightError_mm_, "ko");
+        plot(currentTable.FlowRate_gs_, currentTable.RidgeHeight_mm_, 'bo', 'DisplayName', 'Ridge Height');
+        errorbar(currentTable.FlowRate_gs_, currentTable.RidgeHeight_mm_,currentTable.RidgeHeight_mm_, "o");
         hold off;
         
         % Set plot title and labels for Volume
@@ -149,9 +145,8 @@ for i = 1:numel(chamberPressureValues)
         % Create separate plots for Depth, Diameter, and Volume against FlowRate
         figure;
         hold on;
-        grid on;
         plot(currentTable.NozzleHeight_h_D_, currentTable.Depth_mm_, 'ro', 'DisplayName', 'Depth');
-        errorbar(currentTable.NozzleHeight_h_D_, currentTable.Depth_mm_,currentTable.DepthError_mm_, "ro");
+        errorbar(currentTable.NozzleHeight_h_D_, currentTable.Depth_mm_,currentTable.DepthError_mm_, "o");
         hold off;
         
         % Set plot title and labels for Depth
@@ -168,9 +163,8 @@ for i = 1:numel(chamberPressureValues)
         % Create a new figure for Diameter
         figure;
         hold on;
-        grid on;
         plot(currentTable.NozzleHeight_h_D_, currentTable.Diameter_mm_, 'mo', 'DisplayName', 'Diameter');
-        errorbar(currentTable.NozzleHeight_h_D_, currentTable.Diameter_mm_,currentTable.DiameterError_mm_, "mo");
+        errorbar(currentTable.NozzleHeight_h_D_, currentTable.Diameter_mm_,currentTable.DiameterError_mm_, "o");
         hold off;
         
         % Set plot title and labels for Diameter
@@ -187,9 +181,8 @@ for i = 1:numel(chamberPressureValues)
         % Create a new figure for Volume
         figure;
         hold on;
-        grid on;
         plot(currentTable.NozzleHeight_h_D_, currentTable.Volume_mm_3_, 'bo', 'DisplayName', 'Volume');
-        errorbar(currentTable.NozzleHeight_h_D_, currentTable.Volume_mm_3_,currentTable.VolumeError_mm_3_, "bo");
+        errorbar(currentTable.NozzleHeight_h_D_, currentTable.Volume_mm_3_,currentTable.VolumeError_mm_3_, "o");
         hold off;
         
         % Set plot title and labels for Volume
@@ -206,9 +199,8 @@ for i = 1:numel(chamberPressureValues)
          % Create a new figure for Ridge Height
         figure;
         hold on;
-        grid on;
-        plot(currentTable.NozzleHeight_h_D_, currentTable.RidgeHeight_mm_, 'ko', 'DisplayName', 'Ridge Height');
-        errorbar(currentTable.NozzleHeight_h_D_, currentTable.RidgeHeight_mm_,currentTable.RidgeHeightError_mm_, "ko");
+        plot(currentTable.NozzleHeight_h_D_, currentTable.RidgeHeight_mm_, 'bo', 'DisplayName', 'Ridge Height');
+        
         hold off;
         
         % Set plot title and labels for Volume
@@ -261,9 +253,8 @@ for i = 1:numel(nozzleHeightValues)
         % Create separate plots for Depth, Diameter, and Volume against FlowRate
         figure;
         hold on;
-        grid on;
-        plot(currentTable.ChamberPressure_mTorr_, currentTable.Depth_mm_, 'ro', 'DisplayName', 'Depth');
-        errorbar(currentTable.ChamberPressure_mTorr_, currentTable.Depth_mm_,currentTable.DepthError_mm_, "ro");
+        plot(currentTable., currentTable.Depth_mm_, 'ro', 'DisplayName', 'Depth');
+        errorbar(currentTable.ChamberPressure_mTorr_, currentTable.Depth_mm_,currentTable.DepthError_mm_, "o");
         hold off;
         
         % Set plot title and labels for Depth
@@ -280,9 +271,8 @@ for i = 1:numel(nozzleHeightValues)
         % Create a new figure for Diameter
         figure;
         hold on;
-        grid on;
         plot(currentTable.ChamberPressure_mTorr_, currentTable.Diameter_mm_, 'mo', 'DisplayName', 'Diameter');
-        errorbar(currentTable.ChamberPressure_mTorr_, currentTable.Diameter_mm_,currentTable.DiameterError_mm_, "mo");
+        errorbar(currentTable.ChamberPressure_mTorr_, currentTable.Diameter_mm_,currentTable.DiameterError_mm_, "o");
         hold off;
         
         % Set plot title and labels for Diameter
@@ -299,9 +289,7 @@ for i = 1:numel(nozzleHeightValues)
         % Create a new figure for Volume
         figure;
         hold on;
-        grid on;
         plot(currentTable.ChamberPressure_mTorr_, currentTable.Volume_mm_3_, 'bo', 'DisplayName', 'Volume');
-        errorbar(currentTable.ChamberPressure_mTorr_, currentTable.Volume_mm_3_,currentTable.VolumeError_mm_3_, "bo");
         hold off;
         
         % Set plot title and labels for Volume
@@ -318,9 +306,7 @@ for i = 1:numel(nozzleHeightValues)
         % Create a new figure for Ridge Height
         figure;
         hold on;
-        grid on;
-        plot(currentTable.ChamberPressure_mTorr_, currentTable.RidgeHeight_mm_, 'ko', 'DisplayName', 'Ridge Height');
-        errorbar(currentTable.ChamberPressure_mTorr_, currentTable.RidgeHeight_mm_,currentTable.RidgeHeightError_mm_, "ko");
+        plot(currentTable.ChamberPressure_mTorr_, currentTable.RidgeHeight_mm_, 'bo', 'DisplayName', 'Ridge Height');
         hold off;
         
         % Set plot title and labels for Volume
