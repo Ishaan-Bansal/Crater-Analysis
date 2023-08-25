@@ -19,7 +19,7 @@ import pandas as pd
 
 if __name__ == '__main__':
     # Write the relative path to the file you want to load
-    filename = 'Lab Craters\Batch Two STLs\crater01_03_09_2022.stl'
+    filename = 'Lab Craters\Combined STLs\crater9_03_29_2022.stl'
     # Radius for trimming_package; Effects the normal vector and rotation matrix
     trimRadius = 250
     # Radius for trimming the mesh around a point; Effects the histogram and slice
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     # The bounds of the square in which the rays are limited
     bounds = 150
     # The spacing between each ray
-    spacing = 2
+    spacing = 1
     # If the spacing is great, than the resolution of the data is high and vice versa
 
     # mesh = trimesh.load_mesh(filename)
@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
     double_gradient = np.gradient(gradient_norm)
     double_gradient_norm = np.sqrt(double_gradient[0]**2 + double_gradient[1]**2)
-    # double_gradient_norm = medfilt2d(double_gradient_norm, kernel_size=17)
+    double_gradient_norm = medfilt2d(double_gradient_norm, kernel_size=17)
 
     DF = pd.DataFrame(z_locations)
     DF.to_csv("data4.csv", header=False, index=False)
@@ -187,8 +187,9 @@ if __name__ == '__main__':
     ridge_indices = np.array(ridge_indices)
     ridge_z = np.array(ridge_z)
     print(ridge_indices)
-    # plt.figure(5)
-    # plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'r1')
+    plt.figure(5)
+    plt.title('Ridge Detection')
+    plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'r1')
     # plt.show()
 
     # size = ridge_indices.shape[0]
@@ -209,7 +210,7 @@ if __name__ == '__main__':
     
     x, y = np.array(x), np.array(y)
 
-    # plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'kx')
+    plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'kx', markersize=5)
     # plt.show()
 
     crater_start = np.mean(ridge_z)

@@ -582,12 +582,12 @@ def sFit(arr):
     return radius, C[0], C[1], C[2]
 
 if __name__ ==  '__main__':
-    filename = "Testing/Foam Sphere STLS Post Proccessed/4 June 2023/04_06_2023_run1_scan1.stl"
-    mesh = load_mesh(filename,100,100)
-    r, x0, y0, z0, err = sphereFit(mesh, radius=81.49416854901347/2, depth=8.065528520377779, R=74.93)
-    print(r)
-    print(x0,y0,z0)
-    print(err)
+    # filename = "Testing/Foam Sphere STLS Post Proccessed/4 June 2023/04_06_2023_run1_scan1.stl"
+    # mesh = load_mesh(filename,100,100)
+    # r, x0, y0, z0, err = sphereFit(mesh, radius=81.49416854901347/2, depth=8.065528520377779, R=74.93)
+    # print(r)
+    # print(x0,y0,z0)
+    # print(err)
     # fig = plt.figure()
     # ax3D = fig.add_subplot(projection='3d')
     # ax3D.scatter(mesh.vertices[:,0], mesh.vertices[:,1], mesh.vertices[:,2])  
@@ -602,3 +602,32 @@ if __name__ ==  '__main__':
     # ax3D.set_aspect('equal')
     # ax3D.set_zlim3d(-20,100)
     # plt.show()
+    filename = 'Lab Craters\Combined STLs\crater9_03_29_2022.stl'
+    trimRadius = 250
+    # Radius for trimming the mesh around a point; Effects the histogram and slice
+    displayRadius = 250
+    # The bounds of the square in which the rays are limited
+    bounds = 150
+    # The spacing between each ray
+    spacing = 1
+    # If the spacing is great, than the resolution of the data is high and vice versa
+
+    # mesh = trimesh.load_mesh(filename)
+
+    normal_vector, lowest_point, rotation_matrix, rotation_matrix_point = trimming_package(
+        filename, trimRadius)
+    # Find the lowest point in the unrotated basis
+    lowest_point_r = rotation_matrix_point @ lowest_point
+
+    # Trim around the lowest_point
+    new_mesh = Mesh.from_file(
+        filename)
+    trimCircleGivenPoint(new_mesh, lowest_point_r, displayRadius)
+    mesh = trimesh.Trimesh(**trimesh.triangles.to_kwargs(new_mesh.vectors))
+    mesh.remove_infinite_values()
+    mesh.apply_transform(rotation_matrix)
+
+    move(mesh, lowest_point)
+    mesh.show()
+    mesh.export('proccessed.stl')
+

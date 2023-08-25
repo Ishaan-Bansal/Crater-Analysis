@@ -13,7 +13,7 @@ columns = ['ID', 'Depth', 'Diameter', 'Volume', 'Ridge Height']
 df = pd.DataFrame(columns=columns)
 
 # Write the relative path to the folder you want to load
-path = "Lab Craters\Combined STLs"
+path = "Lab Craters\Batch Three STLs"
 cwd = os.getcwd()
 os.chdir(path)
 for filename in os.listdir():
@@ -26,7 +26,7 @@ for filename in os.listdir():
     filename = filename[:-4]
     
     os.chdir(cwd)
-    os.chdir("Lab Craters\Combined Results")
+    os.chdir("Lab Craters\Batch Three Results")
     os.mkdir(filename)
     os.chdir(filename)
 
@@ -76,6 +76,6 @@ for filename in os.listdir():
     os.chdir(path)
 
 os.chdir(cwd)
-df.to_csv("Lab Craters\Combined Results/analysis.csv")
+df.to_csv("Lab Craters\Batch Three Results/analysis.csv")
 
 print("Finished")
