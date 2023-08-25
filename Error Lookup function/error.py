@@ -70,10 +70,10 @@ def on_csv(filename):
         depth, diameter, volume = linear_interpolation(dep, dia)
         err_df.loc[index, "Depth"], err_df.loc[index, "Diameter"], err_df.loc[index, "Volume"] = depth, diameter, volume
         err_df.loc[index, "Ridge Height"] = depth
-    err_df.to_csv("Lab Craters\Combined Results/errors.csv")
+    err_df.to_csv("Lab Craters\Batch Three Results/errors.csv")
     print("File Generated")
 
-file = "Lab Craters\Combined Results/analysis.csv"
+file = "Lab Craters\Batch Three Results/analysis.csv"
 on_csv(file)
 
 # linear_interpolation(20, 30)
