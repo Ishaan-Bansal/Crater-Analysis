@@ -1,4 +1,4 @@
-data = readtable("full.csv");
+data = readtable("n8.csv");
 
 % --------- Control Variables: Chamber Pressure, Nozzle Height ------------
 
@@ -27,7 +27,7 @@ for i = 1:numel(chamberPressureValues)
         % Get the current table
         currentTable = splitTables{i, j};
 
-        if size(currentTable, 1) < 3
+        if size(currentTable, 1) < 2
             continue
         end
 
@@ -140,7 +140,7 @@ for i = 1:numel(chamberPressureValues)
         % Get the current table
         currentTable = splitTables{i, j};
 
-        if size(currentTable, 1) < 3
+        if size(currentTable, 1) < 2
             continue
         end
 
@@ -252,7 +252,7 @@ for i = 1:numel(nozzleHeightValues)
         % Get the current table
         currentTable = splitTables{i, j};
 
-        if size(currentTable, 1) < 3
+        if size(currentTable, 1) < 2
             continue
         end
 
