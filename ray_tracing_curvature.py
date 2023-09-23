@@ -251,11 +251,15 @@ if __name__ == '__main__':
 
     print("Finding Riemmann Sums...")
 
-    mesh_volume = help.crater_volume(z_locations, radius, spacing, crater_start)
+    n, bins, patches = plt.hist(
+    mesh.vertices[:,2], bins=300, density=True, facecolor='b', alpha=0.75)
+    depth = bins[n.argmax()]
+
+    mesh_volume = help.crater_volume(z_locations, radius, spacing, depth)
 
     print("Finding Tetrahedrons...")
     print(mesh.triangles.size)
-    point_mesh_volume = help.crater_volume_tetra(mesh.triangles, radius, crater_start)
+    point_mesh_volume = help.crater_volume_tetra(mesh.triangles, radius, depth)
 
     print("Riemmann Volume: ", mesh_volume)
 
@@ -283,9 +287,7 @@ if __name__ == '__main__':
 
     # help.cut_top(mesh, crater_start)
     # mesh.show()
-    n, bins, patches = plt.hist(
-    mesh.vertices[:,2], bins=300, density=True, facecolor='b', alpha=0.75)
-    depth = bins[n.argmax()]
+
     ridge_height = crater_start - depth
     info = f"Depth: {depth} , Diameter: {radius*2} , Volume: {point_mesh_volume}, Ridge Height: {ridge_height}, Crater Start: {crater_start}"
     print(info)
@@ -376,6 +378,10 @@ def crater_properties(mesh, bounds):
 
     crater_start = np.mean(ridge_z)
 
+    n, bins, patches = plt.hist(
+    mesh.vertices[:,2], bins=300, density=True, facecolor='b', alpha=0.75)
+    depth = bins[n.argmax()]
+
     x, y = [], []
     for i in ridge_indices:
         x.append(x_locations[i[0]][i[1]])
@@ -410,10 +416,7 @@ def crater_properties(mesh, bounds):
     plt.savefig("Circle Fit.svg")
     plt.close()
 
-    mesh_volume = help.crater_volume_tetra(mesh.triangles, radius, crater_start)
+    mesh_volume = help.crater_volume_tetra(mesh.triangles, radius, crater_start=depth)
 
-    n, bins, patches = plt.hist(
-    mesh.vertices[:,2], bins=300, density=True, facecolor='b', alpha=0.75)
-    depth = bins[n.argmax()]
     ridge_height = crater_start - depth
     return depth, 2*radius, mesh_volume, ridge_height

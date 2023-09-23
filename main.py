@@ -12,25 +12,47 @@ import pandas as pd
 columns = ['ID', 'Depth', 'Diameter', 'Volume', 'Ridge Height']
 df = pd.DataFrame(columns=columns)
 
+# Set values
+trimRadius=250 
+displayRadius=250
+bounds=150
+
 # Write the relative path to the folder you want to load
-path = "Lab Craters\Batch Three STLs"
+path = "Lab Craters\September 2023 STLs\leftover"
+savepath = "Lab Craters\September 2023 Results"
 cwd = os.getcwd()
 os.chdir(path)
 for filename in os.listdir():
     if filename[-4:] != ".stl":
         continue
     print("Working on: " + filename)
+    
+    os.chdir(cwd)
+    os.chdir(savepath)
+    if (os.path.exists(filename[:-4])):
+        print("Skipped: " + filename)
+        continue
+    os.chdir(cwd)
+    os.chdir(path)
 
-    mesh = help.load_mesh(filename, trimRadius=250, displayRadius=250)
+    # For unprocessed stl's
+    mesh = help.load_mesh(filename, trimRadius, displayRadius)
+    ################################
+
+    # # For processed stl's
+    # mesh = trimesh.load(filename)
+    # help.move(mesh, help.lowest_point(mesh))
+    # mesh.show()
+    # ################################
     
     filename = filename[:-4]
     
     os.chdir(cwd)
-    os.chdir("Lab Craters\Batch Three Results")
+    os.chdir(savepath)
     os.mkdir(filename)
     os.chdir(filename)
 
-    depth, diameter, volume, ridge_height = rtc.crater_properties(mesh, bounds=150)
+    depth, diameter, volume, ridge_height = rtc.crater_properties(mesh, bounds)
 
     if int(depth/10) > 0:        
         for z in range(int(depth/10), int(depth), int(depth/10)):
@@ -76,6 +98,6 @@ for filename in os.listdir():
     os.chdir(path)
 
 os.chdir(cwd)
-df.to_csv("Lab Craters\Batch Three Results/analysis.csv")
+# df.to_csv(savepath + "/analysis.csv")
 
 print("Finished")

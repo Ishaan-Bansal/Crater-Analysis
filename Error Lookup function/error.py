@@ -1,4 +1,5 @@
-# Interpolate error due to analyis in mm
+# on_csv(filename, savepath): Interpolate algorithm error due to analyis in mm
+# total_error(filename, savepath): Combine algorithm and camera error in mm
 
 
 import pandas as pd
@@ -53,9 +54,12 @@ def linear_interpolation(depth, diameter):
     return abs(float(depth_error)), abs(float(diameter_error)), abs(float(volume_error))
 
 
-def on_csv(filename):
+def on_csv(filename, savepath):
     df = pd.read_csv(filename)
-    err_df = df.copy(deep=True)
+    df["Depth Error"] = ''
+    df["Diamter Error"] = ''
+    df["Volume Error"] = ''
+    df["Ridge Height Error"] = ''
     for index, row in df.iterrows():
         dep = row["Depth"]
         dia = row["Diameter"]
@@ -68,12 +72,49 @@ def on_csv(filename):
         elif dia > 240:
             dia = 240
         depth, diameter, volume = linear_interpolation(dep, dia)
-        err_df.loc[index, "Depth"], err_df.loc[index, "Diameter"], err_df.loc[index, "Volume"] = depth, diameter, volume
-        err_df.loc[index, "Ridge Height"] = depth
-    err_df.to_csv("Lab Craters\Batch Three Results/errors.csv")
+        df.loc[index, "Depth Error"], df.loc[index, "Diameter Error"], df.loc[index, "Volume Error"] = depth, diameter, volume
+        df.loc[index, "Ridge Height Error"] = depth
+    df.to_csv(filename, index_col=False)
     print("File Generated")
 
-file = "Lab Craters\Batch Three Results/analysis.csv"
-on_csv(file)
+def total_error(filename, savepath):
+    df = pd.read_csv(filename) # for analysis+error.csv
+    df["Depth Total Error"] = ''
+    df["Diamter Total Error"] = ''
+    df["Volume Total Error"] = ''
+    df["Ridge Height Total Error"] = ''
+    for index, row in df.iterrows():
+        dep = row["Depth"]
+        dia = row["Diameter"]
+        vol = row["Volume"]
+        rh = row["Ridge Height"]
+        dep_err = row["Depth Error"]
+        dia_err = row["Diameter Error"]
+        vol_err = row["Volume Error"]
+        rh_err = row["Ridge Height Error"]
 
-# linear_interpolation(20, 30)
+        delta_camera = 0.7 # Calculated value for Microsoft Azure Kinect DK
+
+        delta_dep = delta_camera 
+        delta_dia = 2*delta_camera
+        delta_volume = (3*delta_dep/dep)*vol
+        delta_rh = delta_camera
+
+        df.loc[index,"Depth Total Error"] = np.sqrt(delta_dep**2 + dep_err**2)
+        df.loc[index,"Diamter Total Error"] = np.sqrt(dia_err**2 + delta_dia**2)
+        df.loc[index,"Volume Total Error"] = np.sqrt(vol_err**2 + delta_volume**2)
+        df.loc[index,"Ridge Height Total Error"] = np.sqrt(delta_rh**2 + rh_err**2)
+    df.to_csv(savepath, index_col=False)
+    print("File Generated")
+
+# # Generate algorithm error for each instance
+# file = "Lab Craters\September 2023 Results/analysis.csv"
+# savepath = "Lab Craters\September 2023 Results/errors.csv"
+# on_csv(file, savepath)
+# ############################################
+
+# Combine algorithm error and camera error for each instance
+file = "Lab Craters\September 2023 Results/analysis.csv"
+savepath = "Lab Craters\September 2023 Results/final.csv"
+total_error(file, savepath)
+#############################################
