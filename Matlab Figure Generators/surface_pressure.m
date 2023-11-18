@@ -21,7 +21,7 @@ width = 1.1*max(data.SurfacePressure_kPa_);
 height = 1.1*max(data.Depth_mm_);
 axis([0 width 0 height]);
 
-saveas(gcf, ['Surface Pressure (kPa) vs Depth.svg']);
+saveas(gcf, ['Surface Pressure (kPa) vs Depth.fig']);
 
 % Create a new figure for Diameter
 figure;
@@ -40,7 +40,7 @@ width = 1.1*max(data.SurfacePressure_kPa_);
 height = 1.1*max(data.Diameter_mm_);
 axis([0 width 0 height]);
 
-saveas(gcf, ['Surface Pressure (kPa) vs Diameter.svg']);
+saveas(gcf, ['Surface Pressure (kPa) vs Diameter.fig']);
 
 % Create a new figure for Volume
 figure;
@@ -59,7 +59,7 @@ width = 1.1*max(data.SurfacePressure_kPa_);
 height = 1.1*max(data.Volume_mm_3_);
 axis([0 width 0 height]);
 
-saveas(gcf, ['Surface Pressure (kPa) vs Volume.svg']);
+saveas(gcf, ['Surface Pressure (kPa) vs Volume.fig']);
 
 % Create a new figure for Ridge Height
 figure;
@@ -79,4 +79,4 @@ height_max = 1.1*max(data.RidgeHeight_mm_);
 height_min = 0.9*min(data.RidgeHeight_mm_);
 axis([0 width height_min height_max]);
 
-saveas(gcf, ['Surface Pressure (kPa) vs Ridge Height.svg']);
+saveas(gcf, ['Surface Pressure (kPa) vs Ridge Height.fig']);
