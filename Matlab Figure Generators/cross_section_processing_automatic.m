@@ -1,4 +1,4 @@
-data = readtable("full for cross sections.csv");
+data = readtable("CSV files/full for cross sections.csv");
 disp(data)
 
 % --------- Control Variables: Chamber Pressure, Nozzle Height ------------
@@ -35,7 +35,7 @@ for i = 1:numel(chamberPressureValues)
         folder_index = currentTable.Folder_Index;
         labels = cellstr(num2str(currentTable.FlowRate_gs_));
         
-        plotTitle = "Chamber Pressure " + num2str(currentTable{1,"ChamberPressure_mTorr_"}) + " mTorr, Nozzle Height " + num2str(currentTable{1,"NozzleHeight_h_D_"}) + " h_D"
+        plotTitle = "Chamber Pressure " + num2str(currentTable{1,"ChamberPressure_mTorr_"}) + " mTorr, Nozzle Height " + num2str(currentTable{1,"NozzleHeight_h_D_"}) + " h_D";
         plotCrossSections(folder_index, labels, "Flow Rate (g/s)", plotTitle)
         
     end
@@ -77,7 +77,7 @@ for i = 1:numel(chamberPressureValues)
         folder_index = currentTable.Folder_Index;
         labels = num2str(currentTable.NozzleHeight_h_D_);
         
-        title = "Chamber Pressure " + num2str(currentTable{1,"ChamberPressure_mTorr_"}) + " mTorr, Flow Rate " + num2str(currentTable{1,"FlowRate_gs_"}) + " g_s"
+        title = "Chamber Pressure " + num2str(currentTable{1,"ChamberPressure_mTorr_"}) + " mTorr, Flow Rate " + num2str(currentTable{1,"FlowRate_gs_"}) + " g_s";
         plotCrossSections(folder_index, labels, "Nozzle Height (h/D)", title)
 
     end
@@ -117,7 +117,7 @@ for i = 1:numel(nozzleHeightValues)
         folder_index = currentTable.Folder_Index;
         labels = num2str(currentTable.ChamberPressure_mTorr_);
         
-        title = "Nozzle Height " + num2str(currentTable{1,"NozzleHeight_h_D_"}) + " h_D, Flow Rate " + num2str(currentTable{1,"FlowRate_gs_"}) + " g_s"
+        title = "Nozzle Height " + num2str(currentTable{1,"NozzleHeight_h_D_"}) + " h_D, Flow Rate " + num2str(currentTable{1,"FlowRate_gs_"}) + " g_s";
         plotCrossSections(folder_index, labels, "Chamber Pressure (mTorr)", title)     
         
     end
@@ -154,8 +154,19 @@ for i = 1:numel(chamberPressureValues)
             folder_index = currentTable.Folder_Index;
             labels = num2str(currentTable.ID);
             
-            title = "Chamber Pressure " + num2str(currentTable{1,"ChamberPressure_mTorr_"}) + " mTorr, Nozzle Height " + num2str(currentTable{1,"NozzleHeight_h_D_"}) + " h_D, Flow Rate " + num2str(currentTable{1,"FlowRate_gs_"}) + " g_s"
+            title = "Chamber Pressure " + num2str(currentTable{1,"ChamberPressure_mTorr_"}) + " mTorr, Nozzle Height " + num2str(currentTable{1,"NozzleHeight_h_D_"}) + " h_D, Flow Rate " + num2str(currentTable{1,"FlowRate_gs_"}) + " g_s";
             plotCrossSections(folder_index, labels, "ID", title)
         end
     end
 end
+
+% Individuals
+
+for i = 1:numel(data.ID)
+    folder_index = data{i,"Folder_Index"};
+    labels = num2str(data{i,"ID"});
+    
+    title = "Chamber Pressure " + num2str(data{i,"ChamberPressure_mTorr_"}) + " mTorr, Nozzle Height " + num2str(data{i,"NozzleHeight_h_D_"}) + " h_D, Flow Rate " + num2str(data{i,"FlowRate_gs_"}) + " g_s" + " ID " + num2str(data{i,"ID"});
+    plotCrossSections(folder_index, labels, "ID", title)
+end
+

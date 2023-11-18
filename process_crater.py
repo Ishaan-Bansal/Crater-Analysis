@@ -2,7 +2,7 @@ import os
 import helper_functions as help
 
 # Write the relative path to the folder you want to load
-path = "Lab Craters\September 2023 STLs"
+path = "Lab Craters/November 2023 STLs"
 save_path = "Processed"
 cwd = os.getcwd()
 os.chdir(path)

@@ -1,6 +1,8 @@
 function plotCrossSections(folder_index, legend_labels, legend_title, tit)
+    dir_name = pwd;
+    cd X-Slices\
 
-    test_data = strings(8, length(folder_index));
+    % test_data = strings(8, length(folder_index));
 
     figure
     grid on
@@ -19,16 +21,16 @@ function plotCrossSections(folder_index, legend_labels, legend_title, tit)
         files = dir('./');
         % Get a logical vector that tells which is a directory.
         dirFlags = [files.isdir];
-        % Extract only those that are directories.
-        subFolders = files(dirFlags);
+        % Extract only those that are files.
+        subFiles = files(~dirFlags);
 
-        k = 2 + folder_index(i);
-        fprintf("%s\n", subFolders(k).name)
+        k = folder_index(i);
+        fprintf("%s\n", subFiles(k).name)
 
         % Extracting data from d
-        test_data(:, i) = string(split(subFolders(k).name, '_'));
+        % test_data(:, i) = string(split(subFiles(k).name, '_'));
 
-        A = load(sprintf("./%s/%s_X-Slice.csv", subFolders(k).name, subFolders(k).name));
+        A = load(subFiles(k).name);
 
         x_crater = A(:, 1);
         y_crater = A(:, 3);
@@ -40,8 +42,9 @@ function plotCrossSections(folder_index, legend_labels, legend_title, tit)
 
         plot(x_crater, y_crater)
     end
-
-    leg = legend(legend_labels)
+    
+    cd(dir_name);
+    leg = legend(legend_labels);
     title(leg, legend_title)
 
     title(tit)
