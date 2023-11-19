@@ -1,8 +1,8 @@
-data = readtable("CSV Files\September 2023 conditions+results.csv");
+data = readtable("CSV Files/November 2023.csv");
 
 % --------- Control Variables: Chamber Pressure, Nozzle Height ------------
 
-chamberPressureValues = unique(data.ChamberPressure_mTorr_);
+chamberPressureValues = unique(data.ChamberPressure_Torr_);
 nozzleHeightValues = unique(data.NozzleHeight_h_D_);
 
 % Create a cell array to store the separate tables
@@ -17,7 +17,7 @@ for i = 1:numel(chamberPressureValues)
         currentHeight = nozzleHeightValues(j);
         
         % Filter the table based on the current chamber pressure and nozzle height
-        splitTables{i, j} = data(data.ChamberPressure_mTorr_ == currentPressure & data.NozzleHeight_h_D_ == currentHeight, :);
+        splitTables{i, j} = data(data.ChamberPressure_Torr_ == currentPressure & data.NozzleHeight_h_D_ == currentHeight, :);
     end
 end
 
@@ -31,92 +31,92 @@ for i = 1:numel(chamberPressureValues)
             continue
         end
 
-        titleText = sprintf('Chamber Pressure %.2f mTorr _ Nozzle Height %.2f hD', chamberPressureValues(i), nozzleHeightValues(j));
+        titleText = sprintf('Chamber Pressure %.2f Torr _ Nozzle Height %.2f hD', chamberPressureValues(i), nozzleHeightValues(j));
         
         % Create separate plots for Depth, Diameter, and Volume against FlowRate
         figure;
         hold on;
         grid on;
-        plot(currentTable.FlowRate_gs_, currentTable.Depth_mm_, 'ro', 'DisplayName', 'Depth');
-        errorbar(currentTable.FlowRate_gs_, currentTable.Depth_mm_,currentTable.DepthError_mm_, "ro");
+        plot(currentTable.FlowRate_g_s_, currentTable.Depth_mm_, 'ro', 'DisplayName', 'Depth');
+        errorbar(currentTable.FlowRate_g_s_, currentTable.Depth_mm_,currentTable.DepthError_mm_, "ro");
         hold off;
         
         % Set plot title and labels for Depth
         title(titleText);
-        xlabel('Flow Rate (gs)');
+        xlabel('Flow Rate (g/s)');
         ylabel('Depth (mm)');
 
-        width = 1.1*max(currentTable.FlowRate_gs_);
+        width = 1.1*max(currentTable.FlowRate_g_s_);
         height = 1.1*max(currentTable.Depth_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, ['Flow Rate (gs) vs Depth; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Flow Rate (gs) vs Depth; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Diameter
         figure;
         hold on;
         grid on;
-        plot(currentTable.FlowRate_gs_, currentTable.Diameter_mm_, 'mo', 'DisplayName', 'Diameter');
-        errorbar(currentTable.FlowRate_gs_, currentTable.Diameter_mm_,currentTable.DiameterError_mm_, "mo");
+        plot(currentTable.FlowRate_g_s_, currentTable.Diameter_mm_, 'mo', 'DisplayName', 'Diameter');
+        errorbar(currentTable.FlowRate_g_s_, currentTable.Diameter_mm_,currentTable.DiameterError_mm_, "mo");
         hold off;
         
         % Set plot title and labels for Diameter
         title(titleText);
-        xlabel('Flow Rate (gs)');
+        xlabel('Flow Rate (g/s)');
         ylabel('Diameter (mm)');
 
-        width = 1.1*max(currentTable.FlowRate_gs_);
+        width = 1.1*max(currentTable.FlowRate_g_s_);
         height = 1.1*max(currentTable.Diameter_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, ['Flow Rate (gs) vs Diameter; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Flow Rate (g_s) vs Diameter; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Volume
         figure;
         hold on;
         grid on;
-        plot(currentTable.FlowRate_gs_, currentTable.Volume_mm_3_, 'bo', 'DisplayName', 'Volume');
-        errorbar(currentTable.FlowRate_gs_, currentTable.Volume_mm_3_,currentTable.VolumeError_mm_3_, "bo");
+        plot(currentTable.FlowRate_g_s_, currentTable.Volume_mm_3_, 'bo', 'DisplayName', 'Volume');
+        errorbar(currentTable.FlowRate_g_s_, currentTable.Volume_mm_3_,currentTable.VolumeError_mm_3_, "bo");
         hold off;
         
         % Set plot title and labels for Volume
         title(titleText);
-        xlabel('Flow Rate (gs)');
+        xlabel('Flow Rate (g/s)');
         ylabel('Volume (mm^3)');
 
-        width = 1.1*max(currentTable.FlowRate_gs_);
+        width = 1.1*max(currentTable.FlowRate_g_s_);
         height = 1.1*max(currentTable.Volume_mm_3_);
         axis([0 width 0 height]);
 
-        saveas(gcf, ['Flow Rate (gs) vs Volume; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Flow Rate (g_s) vs Volume; Control Variables - ' titleText '.svg']);
 
         % Create a new figure for Ridge Height
         figure;
         hold on;
         grid on;
-        plot(currentTable.FlowRate_gs_, currentTable.RidgeHeight_mm_, 'ko', 'DisplayName', 'Ridge Height');
-        errorbar(currentTable.FlowRate_gs_, currentTable.RidgeHeight_mm_,currentTable.RidgeHeightError_mm_, "ko");
+        plot(currentTable.FlowRate_g_s_, currentTable.RidgeHeight_mm_, 'ko', 'DisplayName', 'Ridge Height');
+        errorbar(currentTable.FlowRate_g_s_, currentTable.RidgeHeight_mm_,currentTable.RidgeHeightError_mm_, "ko");
         hold off;
         
         % Set plot title and labels for Volume
         title(titleText);
-        xlabel('Flow Rate (gs)');
+        xlabel('Flow Rate (g/s)');
         ylabel('Ridge Height (mm)');
 
-        width = 1.1*max(currentTable.FlowRate_gs_);
+        width = 1.1*max(currentTable.FlowRate_g_s_);
         height_max = 1.1*max(currentTable.RidgeHeight_mm_);
         height_min = 0.9*min(currentTable.RidgeHeight_mm_);
         axis([0 width height_min height_max]);
 
-        saveas(gcf, ['Flow Rate (gs) vs Ridge Height; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Flow Rate (g_s) vs Ridge Height; Control Variables - ' titleText '.svg']);
         
     end
 end
 
 % --------- Control Variables: Chamber Pressure, Flow Rate ----------------
 
-chamberPressureValues = unique(data.ChamberPressure_mTorr_);
-flowRateValues = unique(data.FlowRate_gs_);
+chamberPressureValues = unique(data.ChamberPressure_Torr_);
+flowRateValues = unique(data.FlowRate_g_s_);
 
 % Create a cell array to store the separate tables
 splitTables = cell(numel(chamberPressureValues), numel(flowRateValues));
@@ -130,7 +130,7 @@ for i = 1:numel(chamberPressureValues)
         currentRate = flowRateValues(j);
         
         % Filter the table based on the current chamber pressure and nozzle height
-        splitTables{i, j} = data(data.ChamberPressure_mTorr_ == currentPressure & data.FlowRate_gs_ == currentRate, :);
+        splitTables{i, j} = data(data.ChamberPressure_Torr_ == currentPressure & data.FlowRate_g_s_ == currentRate, :);
     end
 end
 
@@ -144,7 +144,7 @@ for i = 1:numel(chamberPressureValues)
             continue
         end
 
-        titleText = sprintf('Chamber Pressure %.2f mTorr, Flow Rate %.2f gs', chamberPressureValues(i), flowRateValues(j));
+        titleText = sprintf('Chamber Pressure %.2f Torr, Flow Rate %.2f gs', chamberPressureValues(i), flowRateValues(j));
         
         % Create separate plots for Depth, Diameter, and Volume against FlowRate
         figure;
@@ -163,7 +163,7 @@ for i = 1:numel(chamberPressureValues)
         height = 1.1*max(currentTable.Depth_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, ['Nozzle Height (hD) vs Depth; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Nozzle Height (hD) vs Depth; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Diameter
         figure;
@@ -182,7 +182,7 @@ for i = 1:numel(chamberPressureValues)
         height = 1.1*max(currentTable.Diameter_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, ['Nozzle Height (hD) vs Diameter; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Nozzle Height (hD) vs Diameter; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Volume
         figure;
@@ -201,7 +201,7 @@ for i = 1:numel(chamberPressureValues)
         height = 1.1*max(currentTable.Volume_mm_3_);
         axis([0 width 0 height]);
 
-        saveas(gcf, ['Nozzle Height (hD) vs Volume; Control Variables  - ' titleText '.fig']);
+        saveas(gcf, ['Nozzle Height (hD) vs Volume; Control Variables  - ' titleText '.svg']);
 
          % Create a new figure for Ridge Height
         figure;
@@ -221,14 +221,14 @@ for i = 1:numel(chamberPressureValues)
         height_min = 0.9*min(currentTable.RidgeHeight_mm_);
         axis([0 width height_min height_max]);
 
-        saveas(gcf, ['Nozzle Height (hD) vs Ridge Height; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Nozzle Height (hD) vs Ridge Height; Control Variables - ' titleText '.svg']);
     end
 end
 
 % --------- Control Variables: Nozzle Height, Flow Rate -------------------
 
 nozzleHeightValues = unique(data.NozzleHeight_h_D_);
-flowRateValues = unique(data.FlowRate_gs_);
+flowRateValues = unique(data.FlowRate_g_s_);
 
 % Create a cell array to store the separate tables
 splitTables = cell(numel(nozzleHeightValues), numel(flowRateValues));
@@ -242,7 +242,7 @@ for i = 1:numel(nozzleHeightValues)
         currentRate = flowRateValues(j);
         
         % Filter the table based on the current chamber pressure and nozzle height
-        splitTables{i, j} = data(data.NozzleHeight_h_D_ == currentHeight & data.FlowRate_gs_ == currentRate, :);
+        splitTables{i, j} = data(data.NozzleHeight_h_D_ == currentHeight & data.FlowRate_g_s_ == currentRate, :);
     end
 end
 
@@ -256,93 +256,93 @@ for i = 1:numel(nozzleHeightValues)
             continue
         end
 
-        titleText = sprintf('Nozzle Height %.2f hD, Flow Rate %.2f gs', nozzleHeightValues(i), flowRateValues(j));
+        titleText = sprintf('Nozzle Height %.2f hD, Flow Rate %.2f g_s', nozzleHeightValues(i), flowRateValues(j));
         
         % Create separate plots for Depth, Diameter, and Volume against FlowRate
         figure;
         hold on;
         grid on;
-        plot(currentTable.ChamberPressure_mTorr_, currentTable.Depth_mm_, 'ro', 'DisplayName', 'Depth');
-        errorbar(currentTable.ChamberPressure_mTorr_, currentTable.Depth_mm_,currentTable.DepthError_mm_, "ro");
+        plot(currentTable.ChamberPressure_Torr_, currentTable.Depth_mm_, 'ro', 'DisplayName', 'Depth');
+        errorbar(currentTable.ChamberPressure_Torr_, currentTable.Depth_mm_,currentTable.DepthError_mm_, "ro");
         hold off;
         
         % Set plot title and labels for Depth
         title(titleText);
-        xlabel('Chamber Pressure (mTorr)');
+        xlabel('Chamber Pressure (Torr)');
         ylabel('Depth (mm)');
 
-        width = 1.1*max(currentTable.ChamberPressure_mTorr_);
+        width = 1.1*max(currentTable.ChamberPressure_Torr_);
         height = 1.1*max(currentTable.Depth_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, ['Chamber Pressure (mTorr) vs Depth; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Chamber Pressure (Torr) vs Depth; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Diameter
         figure;
         hold on;
         grid on;
-        plot(currentTable.ChamberPressure_mTorr_, currentTable.Diameter_mm_, 'mo', 'DisplayName', 'Diameter');
-        errorbar(currentTable.ChamberPressure_mTorr_, currentTable.Diameter_mm_,currentTable.DiameterError_mm_, "mo");
+        plot(currentTable.ChamberPressure_Torr_, currentTable.Diameter_mm_, 'mo', 'DisplayName', 'Diameter');
+        errorbar(currentTable.ChamberPressure_Torr_, currentTable.Diameter_mm_,currentTable.DiameterError_mm_, "mo");
         hold off;
         
         % Set plot title and labels for Diameter
         title(titleText);
-        xlabel('Chamber Pressure (mTorr)');
+        xlabel('Chamber Pressure (Torr)');
         ylabel('Diameter (mm)');
 
-        width = 1.1*max(currentTable.ChamberPressure_mTorr_);
+        width = 1.1*max(currentTable.ChamberPressure_Torr_);
         height = 1.1*max(currentTable.Diameter_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, ['Chamber Pressure (mTorr) vs Diameter; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Chamber Pressure (Torr) vs Diameter; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Volume
         figure;
         hold on;
         grid on;
-        plot(currentTable.ChamberPressure_mTorr_, currentTable.Volume_mm_3_, 'bo', 'DisplayName', 'Volume');
-        errorbar(currentTable.ChamberPressure_mTorr_, currentTable.Volume_mm_3_,currentTable.VolumeError_mm_3_, "bo");
+        plot(currentTable.ChamberPressure_Torr_, currentTable.Volume_mm_3_, 'bo', 'DisplayName', 'Volume');
+        errorbar(currentTable.ChamberPressure_Torr_, currentTable.Volume_mm_3_,currentTable.VolumeError_mm_3_, "bo");
         hold off;
         
         % Set plot title and labels for Volume
         title(titleText);
-        xlabel('Chamber Pressure (mTorr)');
+        xlabel('Chamber Pressure (Torr)');
         ylabel('Volume (mm^3)');
 
-        width = 1.1*max(currentTable.ChamberPressure_mTorr_);
+        width = 1.1*max(currentTable.ChamberPressure_Torr_);
         height = 1.1*max(currentTable.Volume_mm_3_);
         axis([0 width 0 height]);
 
-        saveas(gcf, ['Chamber Pressure (mTorr) vs Volume; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Chamber Pressure (Torr) vs Volume; Control Variables - ' titleText '.svg']);
 
         % Create a new figure for Ridge Height
         figure;
         hold on;
         grid on;
-        plot(currentTable.ChamberPressure_mTorr_, currentTable.RidgeHeight_mm_, 'ko', 'DisplayName', 'Ridge Height');
-        errorbar(currentTable.ChamberPressure_mTorr_, currentTable.RidgeHeight_mm_,currentTable.RidgeHeightError_mm_, "ko");
+        plot(currentTable.ChamberPressure_Torr_, currentTable.RidgeHeight_mm_, 'ko', 'DisplayName', 'Ridge Height');
+        errorbar(currentTable.ChamberPressure_Torr_, currentTable.RidgeHeight_mm_,currentTable.RidgeHeightError_mm_, "ko");
         hold off;
         
         % Set plot title and labels for Volume
         title(titleText);
-        xlabel('Chamber Pressure (mTorr)');
+        xlabel('Chamber Pressure (Torr)');
         ylabel('Ridge Height (mm)');
 
-        width = 1.1*max(currentTable.ChamberPressure_mTorr_);
+        width = 1.1*max(currentTable.ChamberPressure_Torr_);
         height_max = 1.1*max(currentTable.RidgeHeight_mm_);
         height_min = 0.9*min(currentTable.RidgeHeight_mm_);
         axis([0 width height_min height_max]);
 
-        saveas(gcf, ['Chamber Pressure (mTorr) vs Ridge Height; Control Variables - ' titleText '.fig']);        
+        saveas(gcf, ['Chamber Pressure (Torr) vs Ridge Height; Control Variables - ' titleText '.svg']);        
     end
 end
 
 % % ---------------- Repeat Tests: Standard Deviation -----------------------
 % 
 % % Get unique values of Chamber Pressure, Nozzle Height, and Flow Rate
-% chamberPressureValues = unique(data.ChamberPressure_mTorr_);
+% chamberPressureValues = unique(data.ChamberPressure_Torr_);
 % nozzleHeightValues = unique(data.NozzleHeight_h_D_);
-% flowRateValues = unique(data.FlowRate_gs_);
+% flowRateValues = unique(data.FlowRate_g_s_);
 % 
 % % Loop through the unique combinations of Chamber Pressure, Nozzle Height, and Flow Rate
 % for i = 1:numel(chamberPressureValues)
@@ -354,9 +354,9 @@ end
 %             currentFlowRate = flowRateValues(k);
 %             
 %             % Create a mask to filter the rows based on the current combination
-%             mask = (data.ChamberPressure_mTorr_ == currentChamberPressure) & ...
+%             mask = (data.ChamberPressure_Torr_ == currentChamberPressure) & ...
 %                    (data.NozzleHeight_h_D_ == currentNozzleHeight) & ...
-%                    (data.FlowRate_gs_ == currentFlowRate);
+%                    (data.FlowRate_g_s_ == currentFlowRate);
 %             
 %             % Get the subset of the table based on the mask
 %             currentTable = data(mask, :);
@@ -377,13 +377,13 @@ end
 %                 hold off;
 %                 
 %                 % Set plot title and labels for Depth
-%                 titleText = sprintf('Chamber Pressure %.2f mTorr, Nozzle Height %.2f hD, Flow Rate %.2f gs', chamberPressureValues(i), nozzleHeightValues(j), flowRateValues(k));
+%                 titleText = sprintf('Chamber Pressure %.2f Torr, Nozzle Height %.2f hD, Flow Rate %.2f g/s', chamberPressureValues(i), nozzleHeightValues(j), flowRateValues(k));
 %                 title(titleText);
 %                 xlabel('Depth (mm)');
 %                 ylabel('Probability Density');
 %                 
-%                 % Save the figure as .fig file with the specified naming convention
-%                 saveas(gcf, ['Depth_NormalDistribution; Control Variables - ' titleText '.fig']);
+%                 % Save the figure as .svg file with the specified naming convention
+%                 saveas(gcf, ['Depth_NormalDistribution; Control Variables - ' titleText '.svg']);
 %     
 %                 % Create a new figure for Diameter
 %                 figure;
@@ -403,8 +403,8 @@ end
 %                 xlabel('Diameter (mm)');
 %                 ylabel('Probability Density');
 %                 
-%                 % Save the figure as .fig file with the specified naming convention
-%                 saveas(gcf, ['Diameter_NormalDistribution; Control Variables - ' titleText '.fig']);
+%                 % Save the figure as .svg file with the specified naming convention
+%                 saveas(gcf, ['Diameter_NormalDistribution; Control Variables - ' titleText '.svg']);
 %     
 %                 % Create a new figure for Volume
 %                 figure;
@@ -424,8 +424,8 @@ end
 %                 xlabel('Volume  (mm^3)');
 %                 ylabel('Probability Density');
 %                 
-%                 % Save the figure as .fig file with the specified naming convention
-%                 saveas(gcf, ['Volume_NormalDistribution; Control Variables - ' titleText '.fig']);
+%                 % Save the figure as .svg file with the specified naming convention
+%                 saveas(gcf, ['Volume_NormalDistribution; Control Variables - ' titleText '.svg']);
 %             end
 %         end
 %     end

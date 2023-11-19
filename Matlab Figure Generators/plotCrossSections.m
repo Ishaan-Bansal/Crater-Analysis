@@ -44,7 +44,7 @@ function plotCrossSections(folder_index, legend_labels, legend_title, tit)
     end
     
     cd(dir_name);
-    leg = legend(legend_labels);
+    leg = legend(legend_labels, 'Interpreter', 'none');
     title(leg, legend_title)
 
     title(tit)

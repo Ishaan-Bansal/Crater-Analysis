@@ -98,6 +98,6 @@ for filename in os.listdir():
     os.chdir(path)
 
 os.chdir(cwd)
-df.to_csv(savepath + "/analysis.csv")
+df.to_csv(savepath + "/analysis.csv", index=False)
 
 print("Finished")

@@ -5,6 +5,7 @@
 import pandas as pd
 import numpy as np
 from scipy.interpolate import griddata
+import re
 
 # Define the depth and diameter values
 depth_values = [5, 10, 15, 20, 25, 30, 35]
@@ -54,10 +55,10 @@ def linear_interpolation(depth, diameter):
     return abs(float(depth_error)), abs(float(diameter_error)), abs(float(volume_error))
 
 
-def on_csv(filename, savepath):
+def on_csv(filename):
     df = pd.read_csv(filename)
     df["Depth Error"] = ''
-    df["Diamter Error"] = ''
+    df["Diameter Error"] = ''
     df["Volume Error"] = ''
     df["Ridge Height Error"] = ''
     for index, row in df.iterrows():
@@ -74,8 +75,8 @@ def on_csv(filename, savepath):
         depth, diameter, volume = linear_interpolation(dep, dia)
         df.loc[index, "Depth Error"], df.loc[index, "Diameter Error"], df.loc[index, "Volume Error"] = depth, diameter, volume
         df.loc[index, "Ridge Height Error"] = depth
-    df.to_csv(filename, index_col=False)
-    print("File Generated")
+    df.to_csv(filename)
+    print("File Updated")
 
 def total_error(filename, savepath):
     df = pd.read_csv(filename) # for analysis+error.csv
@@ -83,7 +84,32 @@ def total_error(filename, savepath):
     df["Diamter Total Error"] = ''
     df["Volume Total Error"] = ''
     df["Ridge Height Total Error"] = ''
+    df["ID"] = ""
+    df["Date"] = ""
+    df["Chamber Pressure (Torr)"] = ""
+    df["Nozzle Height (h/D)"] = ""
+    df["Flow Rate (g/s)"] = ""
     for index, row in df.iterrows():
+        name = row["File"]
+        pattern = r'(\d{4}_\d{2}_\d{2})_(\d+[a-zA-Z]*)?(?:_([a-zA-Z_]+\d*))?(?:_([a-zA-Z\d]+))?(?:_([a-zA-Z_]+\d+))?'
+        matches = re.match(pattern, name)
+        date,cp,hD,fr,tag = matches.groups()
+        df.loc[index, "Date"] = date
+        df.loc[index, "ID"] = tag
+        if cp == "50mTorr":
+            df.loc[index, "Chamber Pressure (Torr)"] = 0.05
+        else:
+            df.loc[index, "Chamber Pressure (Torr)"] = 6
+        if hD == "h3":
+            df.loc[index, "Nozzle Height (h/D)"] = 3
+        elif hD == "h10":
+            df.loc[index, "Nozzle Height (h/D)"] = 10
+        elif hD == "h15":
+            df.loc[index, "Nozzle Height (h/D)"] = 15
+        if fr == "860gs":
+            df.loc[index, "Flow Rate (g/s)"] = 8.6
+        else:
+            df.loc[index, "Flow Rate (g/s)"] = 0.32
         dep = row["Depth"]
         dia = row["Diameter"]
         vol = row["Volume"]
@@ -104,17 +130,17 @@ def total_error(filename, savepath):
         df.loc[index,"Diamter Total Error"] = np.sqrt(dia_err**2 + delta_dia**2)
         df.loc[index,"Volume Total Error"] = np.sqrt(vol_err**2 + delta_volume**2)
         df.loc[index,"Ridge Height Total Error"] = np.sqrt(delta_rh**2 + rh_err**2)
-    df.to_csv(savepath, index_col=False)
+    
+    df = df.drop('Depth Error', axis=1)
+    df = df.drop('Diameter Error', axis=1)
+    df = df.drop('Volume Error', axis=1)
+    df = df.drop('Ridge Height Error', axis=1)
+    df.to_csv(savepath, index=False)
     print("File Generated")
 
-# # Generate algorithm error for each instance
-# file = "Lab Craters\September 2023 Results/analysis.csv"
-# savepath = "Lab Craters\September 2023 Results/errors.csv"
-# on_csv(file, savepath)
-# ############################################
-
 # Combine algorithm error and camera error for each instance
-file = "Lab Craters\September 2023 Results/analysis.csv"
-savepath = "Lab Craters\September 2023 Results/final.csv"
+file = "Lab Craters/November 2023 Results/analysis.csv"
+savepath = "Lab Craters/November 2023 Results/final.csv"
+# on_csv(file)
 total_error(file, savepath)
 #############################################
