@@ -20,7 +20,7 @@ def rename_files(folder_path):
             print(f'Renamed: {file_name} -> {new_name}')
 
 # Specify the path to the folder containing the files
-folder_path = "Lab Craters/November 2023 Results/2023_08_07_50mTorr_h10_1s_860gs_crater16"
+folder_path = "Lab Craters/November 2023 Results II/2023_08_07_50mTorr_h10_1s_860gs_crater16"
 
 # Call the function to rename files in the specified folder
 rename_files(folder_path)

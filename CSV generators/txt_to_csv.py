@@ -33,10 +33,10 @@ def convert_to_csv(folder_path, output_file):
     print('Conversion completed successfully.')
 
 # Provide the folder path containing the text files
-folder_path = 'Lab Craters\September 2023 Results\TXTs'
+folder_path = 'Lab Craters/November 2023 Results II/TXTs'
 
 # Provide the output CSV file path
-output_file = 'Lab Craters\September 2023 Results/analysis.csv'
+output_file = 'Lab Craters/November 2023 Results II/analysis.csv'
 
 # Call the function to convert the text files to CSV
 convert_to_csv(folder_path, output_file)

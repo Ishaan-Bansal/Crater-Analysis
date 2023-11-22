@@ -62,8 +62,8 @@ def on_csv(filename):
     df["Volume Error"] = ''
     df["Ridge Height Error"] = ''
     for index, row in df.iterrows():
-        dep = row["Depth"]
-        dia = row["Diameter"]
+        dep = row["Depth (mm)"]
+        dia = row["Diameter (mm)"]
         if dep < 5:
             dep = 5
         elif dep > 35:
@@ -75,15 +75,15 @@ def on_csv(filename):
         depth, diameter, volume = linear_interpolation(dep, dia)
         df.loc[index, "Depth Error"], df.loc[index, "Diameter Error"], df.loc[index, "Volume Error"] = depth, diameter, volume
         df.loc[index, "Ridge Height Error"] = depth
-    df.to_csv(filename)
+    df.to_csv(filename, index=False)
     print("File Updated")
 
 def total_error(filename, savepath):
     df = pd.read_csv(filename) # for analysis+error.csv
-    df["Depth Total Error"] = ''
-    df["Diamter Total Error"] = ''
-    df["Volume Total Error"] = ''
-    df["Ridge Height Total Error"] = ''
+    df["Depth Error (mm)"] = ''
+    df["Diameter Error (mm)"] = ''
+    df["Volume Error (mm^3)"] = ''
+    df["Ridge Height Error (mm)"] = ''
     df["ID"] = ""
     df["Date"] = ""
     df["Chamber Pressure (Torr)"] = ""
@@ -110,10 +110,10 @@ def total_error(filename, savepath):
             df.loc[index, "Flow Rate (g/s)"] = 8.6
         else:
             df.loc[index, "Flow Rate (g/s)"] = 0.32
-        dep = row["Depth"]
-        dia = row["Diameter"]
-        vol = row["Volume"]
-        rh = row["Ridge Height"]
+        dep = row["Depth (mm)"]
+        dia = row["Diameter (mm)"]
+        vol = row["Volume (mm^3)"]
+        rh = row["Ridge Height (mm)"]
         dep_err = row["Depth Error"]
         dia_err = row["Diameter Error"]
         vol_err = row["Volume Error"]
@@ -126,10 +126,10 @@ def total_error(filename, savepath):
         delta_volume = (3*delta_dep/dep)*vol
         delta_rh = delta_camera
 
-        df.loc[index,"Depth Total Error"] = np.sqrt(delta_dep**2 + dep_err**2)
-        df.loc[index,"Diamter Total Error"] = np.sqrt(dia_err**2 + delta_dia**2)
-        df.loc[index,"Volume Total Error"] = np.sqrt(vol_err**2 + delta_volume**2)
-        df.loc[index,"Ridge Height Total Error"] = np.sqrt(delta_rh**2 + rh_err**2)
+        df.loc[index,"Depth Error (mm)"] = np.sqrt(delta_dep**2 + dep_err**2)
+        df.loc[index,"Diameter Error (mm)"] = np.sqrt(dia_err**2 + delta_dia**2)
+        df.loc[index,"Volume Error (mm^3)"] = np.sqrt(vol_err**2 + delta_volume**2)
+        df.loc[index,"Ridge Height Error (mm)"] = np.sqrt(delta_rh**2 + rh_err**2)
     
     df = df.drop('Depth Error', axis=1)
     df = df.drop('Diameter Error', axis=1)
@@ -139,8 +139,8 @@ def total_error(filename, savepath):
     print("File Generated")
 
 # Combine algorithm error and camera error for each instance
-file = "Lab Craters/November 2023 Results/analysis.csv"
-savepath = "Lab Craters/November 2023 Results/final.csv"
-# on_csv(file)
+file = "Lab Craters/November 2023 Results II/analysis.csv"
+savepath = "Lab Craters/November 2023 Results II/final.csv"
+on_csv(file)
 total_error(file, savepath)
 #############################################

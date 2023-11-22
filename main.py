@@ -9,7 +9,7 @@ import helper_functions as help
 import numpy as np
 import pandas as pd
 
-columns = ['ID', 'Depth', 'Diameter', 'Volume', 'Ridge Height']
+columns = ['File', 'Depth (mm)', 'Diameter (mm)', 'Volume (mm^3)', 'Ridge Height (mm)']
 df = pd.DataFrame(columns=columns)
 
 # Set values
@@ -19,7 +19,7 @@ bounds=150
 
 # Write the relative path to the folder you want to load
 path = "Lab Craters/November 2023 STLs\Processed"
-savepath = "Lab Craters/November 2023 Results"
+savepath = "Lab Craters/November 2023 Results II"
 cwd = os.getcwd()
 os.chdir(path)
 for filename in os.listdir():
@@ -91,13 +91,13 @@ for filename in os.listdir():
     file.write(info)
     file.close()
 
-    new_row = {'ID' : filename, 'Depth' : depth, 'Diameter' : diameter, 'Volume' : volume, 'Ridge Height' : ridge_height}
+    new_row = {'File' : filename, 'Depth (mm)' : depth, 'Diameter (mm)' : diameter, 'Volume (mm^3)' : volume, 'Ridge Height (mm)' : ridge_height}
     df.loc[len(df)] = new_row
 
     os.chdir(cwd)
     os.chdir(path)
 
 os.chdir(cwd)
-df.to_csv(savepath + "/analysis.csv", index=False)
+# df.to_csv(savepath + "/analysis.csv", index=False)
 
-print("Finished")
+print("Finished") 

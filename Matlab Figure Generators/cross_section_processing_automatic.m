@@ -1,4 +1,4 @@
-data = readtable("CSV files/November 2023.csv");
+data = readtable("CSV files/November 2023 II.csv");
 disp(data)
 
 % --------- Control Variables: Chamber Pressure, Nozzle Height ------------

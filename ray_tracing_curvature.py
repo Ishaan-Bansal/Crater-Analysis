@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import statistics as stats
 import scipy.ndimage
 from scipy.signal import medfilt2d
+from scipy.ndimage import gaussian_filter
+from scipy.ndimage import gaussian_laplace
 import ray_tracing_Z_Slices as rtz
 import ray_tracing_X_Slices as rtx
 from skimage import data, color
@@ -19,7 +21,7 @@ import pandas as pd
 
 if __name__ == '__main__':
     # Write the relative path to the file you want to load
-    filename = 'Lab Craters\Combined STLs\crater9_03_29_2022.stl'
+    filename = 'Lobby/2023_03_10_6Torr_h10_860gs_crater2.stl'
     # Radius for trimming_package; Effects the normal vector and rotation matrix
     trimRadius = 250
     # Radius for trimming the mesh around a point; Effects the histogram and slice
@@ -46,7 +48,7 @@ if __name__ == '__main__':
     mesh.apply_transform(rotation_matrix)
 
     help.move(mesh, lowest_point)
-    mesh.show()
+    # mesh.show()
 
     ray_directions_array = np.array([])
     ray_origins_array = np.array([])
@@ -94,7 +96,8 @@ if __name__ == '__main__':
     #                        ray_visualize])
     # scene.show()
 
-    # z_locations = medfilt2d(z_locations, kernel_size=3)
+    # z_locations = medfilt2d(z_locations, kernel_size=17)
+    z_locations = gaussian_filter(z_locations, sigma=5)
 
     gradient = np.gradient(z_locations)
     gradient_norm = np.sqrt(gradient[0]**2 + gradient[1]**2)
@@ -102,7 +105,7 @@ if __name__ == '__main__':
 
     double_gradient = np.gradient(gradient_norm)
     double_gradient_norm = np.sqrt(double_gradient[0]**2 + double_gradient[1]**2)
-    double_gradient_norm = medfilt2d(double_gradient_norm, kernel_size=17)
+    # double_gradient_norm = medfilt2d(double_gradient_norm, kernel_size=17)
 
     DF = pd.DataFrame(z_locations)
     DF.to_csv("data4.csv", header=False, index=False)
@@ -329,6 +332,7 @@ def crater_properties(mesh, bounds):
     x_locations = np.array(x_locations, dtype=float)
     y_locations = np.array(y_locations, dtype=float)
     z_locations = np.array(z_locations, dtype=float)
+    z_locations = gaussian_filter(z_locations, sigma=5)
     divergence_vis = np.array(divergence_vis)
 
     gradient = np.gradient(z_locations)
@@ -336,7 +340,6 @@ def crater_properties(mesh, bounds):
 
     double_gradient = np.gradient(gradient_norm)
     double_gradient_norm = np.sqrt(double_gradient[0]**2 + double_gradient[1]**2)
-    double_gradient_norm = medfilt2d(double_gradient_norm, kernel_size=17)
 
     fig = plt.figure()
     img = plt.imshow(double_gradient_norm, interpolation='none', cmap='turbo')
@@ -358,7 +361,7 @@ def crater_properties(mesh, bounds):
         length = int(np.round(np.hypot(x1-x0, y1-y0)))
         x, y = np.linspace(x0, x1, length), np.linspace(y0, y1, length)
         mask = np.sqrt((x-radius_x)**2 + (y-radius_y) **
-                    2) >= (0.2*(radius_x+radius_y)/2)
+                    2) >= (0.5*(radius_x+radius_y)/2)
         x, y = x[mask], y[mask]
 
         # Extract the values along the line
