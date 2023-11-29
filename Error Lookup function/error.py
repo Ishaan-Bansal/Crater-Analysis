@@ -139,8 +139,8 @@ def total_error(filename, savepath):
     print("File Generated")
 
 # Combine algorithm error and camera error for each instance
-file = "Lab Craters/November 2023 Results II/analysis.csv"
-savepath = "Lab Craters/November 2023 Results II/final.csv"
+file = "Lab Craters/November 2023 Results III/analysis.csv"
+savepath = "Lab Craters/November 2023 Results III/final.csv"
 on_csv(file)
 total_error(file, savepath)
 #############################################

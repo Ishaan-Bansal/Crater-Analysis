@@ -19,7 +19,7 @@ bounds=150
 
 # Write the relative path to the folder you want to load
 path = "Lab Craters/November 2023 STLs\Processed"
-savepath = "Lab Craters/November 2023 Results II"
+savepath = "Lab Craters/November 2023 Results III"
 cwd = os.getcwd()
 os.chdir(path)
 for filename in os.listdir():
@@ -41,7 +41,7 @@ for filename in os.listdir():
 
     # For processed stl's
     mesh = trimesh.load(filename)
-    help.move(mesh, help.lowest_point(mesh))
+    # help.move(mesh, help.lowest_point(mesh))
     # mesh.show()
     ################################
     
@@ -98,6 +98,6 @@ for filename in os.listdir():
     os.chdir(path)
 
 os.chdir(cwd)
-# df.to_csv(savepath + "/analysis.csv", index=False)
+df.to_csv(savepath + "/analysis.csv", index=False)
 
 print("Finished") 

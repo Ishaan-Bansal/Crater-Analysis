@@ -21,7 +21,7 @@ import pandas as pd
 
 if __name__ == '__main__':
     # Write the relative path to the file you want to load
-    filename = 'Lobby/2023_03_10_6Torr_h10_860gs_crater2.stl'
+    filename = 'Lab Craters/November 2023 STLs/Processed/2023_03_15_6Torr_h3_860gs_crater10.stl'
     # Radius for trimming_package; Effects the normal vector and rotation matrix
     trimRadius = 250
     # Radius for trimming the mesh around a point; Effects the histogram and slice
@@ -34,21 +34,23 @@ if __name__ == '__main__':
 
     # mesh = trimesh.load_mesh(filename)
 
-    normal_vector, lowest_point, rotation_matrix, rotation_matrix_point = help.trimming_package(
-        filename, trimRadius)
-    # Find the lowest point in the unrotated basis
-    lowest_point_r = rotation_matrix_point @ lowest_point
+    # normal_vector, lowest_point, rotation_matrix, rotation_matrix_point = help.trimming_package(
+    #     filename, trimRadius)
+    # # Find the lowest point in the unrotated basis
+    # lowest_point_r = rotation_matrix_point @ lowest_point
 
-    # Trim around the lowest_point
-    new_mesh = Mesh.from_file(
-        filename)
-    help.trimCircleGivenPoint(new_mesh, lowest_point_r, displayRadius)
-    mesh = trimesh.Trimesh(**trimesh.triangles.to_kwargs(new_mesh.vectors))
-    mesh.remove_infinite_values()
-    mesh.apply_transform(rotation_matrix)
+    # # Trim around the lowest_point
+    # new_mesh = Mesh.from_file(
+    #     filename)
+    # help.trimCircleGivenPoint(new_mesh, lowest_point_r, displayRadius)
+    # mesh = trimesh.Trimesh(**trimesh.triangles.to_kwargs(new_mesh.vectors))
+    # mesh.remove_infinite_values()
+    # mesh.apply_transform(rotation_matrix)
 
-    help.move(mesh, lowest_point)
+    # help.move(mesh, lowest_point)
     # mesh.show()
+
+    mesh = trimesh.load(filename)
 
     ray_directions_array = np.array([])
     ray_origins_array = np.array([])
@@ -103,12 +105,14 @@ if __name__ == '__main__':
     gradient_norm = np.sqrt(gradient[0]**2 + gradient[1]**2)
     # gradient_norm = medfilt2d(gradient_norm, kernel_size=3)
 
-    double_gradient = np.gradient(gradient_norm)
-    double_gradient_norm = np.sqrt(double_gradient[0]**2 + double_gradient[1]**2)
+    d2z_dx2 = np.gradient(gradient[0])[0]
+    d2z_dy2 = np.gradient(gradient[1])[1]
+    double_gradient_norm = d2z_dx2 + d2z_dy2
+    # double_gradient = np.gradient(gradient_norm)
+    # double_gradient_norm = np.sqrt(double_gradient[0]**2 + double_gradient[1]**2)
     # double_gradient_norm = medfilt2d(double_gradient_norm, kernel_size=17)
 
-    DF = pd.DataFrame(z_locations)
-    DF.to_csv("data4.csv", header=False, index=False)
+
 
     fig = plt.figure(1)
     ax = plt.axes()
@@ -169,9 +173,9 @@ if __name__ == '__main__':
         x0, y0 = radius_x, radius_y
         length = int(np.round(np.hypot(x1-x0, y1-y0)))
         x, y = np.linspace(x0, x1, length), np.linspace(y0, y1, length)
-        mask = np.sqrt((x-radius_x)**2 + (y-radius_y) **
-                    2) >= (0.2*(radius_x+radius_y)/2)
-        x, y = x[mask], y[mask]
+        # mask = np.sqrt((x-radius_x)**2 + (y-radius_y) **
+        #             2) >= (0.2*(radius_x+radius_y)/2)
+        # x, y = x[mask], y[mask]
 
         # Extract the values along the line
         x = np.round(x).astype(int)
@@ -180,7 +184,7 @@ if __name__ == '__main__':
 
     #     # print("X:")
     #     # print(x)
-        index = np.argmax(z_line)
+        index = np.argmin(z_line)
         pair = np.array([y[index], x[index]])
         ridge_indices.append(pair)
         height_line = z_locations[x, y]
@@ -332,18 +336,31 @@ def crater_properties(mesh, bounds):
     x_locations = np.array(x_locations, dtype=float)
     y_locations = np.array(y_locations, dtype=float)
     z_locations = np.array(z_locations, dtype=float)
-    z_locations = gaussian_filter(z_locations, sigma=5)
+    sigma = 3 # Standard deviation of the gaussian filter
+    z_locations = gaussian_filter(z_locations, sigma=sigma)
     divergence_vis = np.array(divergence_vis)
 
-    gradient = np.gradient(z_locations)
-    gradient_norm = np.sqrt(gradient[0]**2 + gradient[1]**2)
+    plt.figure()
+    plt.xlabel("x position (mm)")
+    plt.ylabel("y position (mm)")
+    plt.title('Height Map')
+    img = plt.imshow(z_locations, interpolation='none', cmap='turbo')
+    plt.savefig("Height_Map.svg")
+    plt.close()
 
-    double_gradient = np.gradient(gradient_norm)
-    double_gradient_norm = np.sqrt(double_gradient[0]**2 + double_gradient[1]**2)
+    gradient = np.gradient(z_locations)
+
+    d2z_dx2 = np.gradient(gradient[0])[0]
+    d2z_dy2 = np.gradient(gradient[1])[1]
+    LoG = sigma**2 * (d2z_dx2 + d2z_dy2) 
 
     fig = plt.figure()
-    img = plt.imshow(double_gradient_norm, interpolation='none', cmap='turbo')
+    img = plt.imshow(LoG, interpolation='none', cmap='turbo')
     cbar = plt.colorbar(img)
+    plt.xlabel("x position (mm)")
+    plt.ylabel("y position (mm)")
+    plt.title('Laplacian of Gaussian')
+    plt.savefig("LoG.svg")
 
     ridge_indices = []
     ridge_z = []
@@ -360,16 +377,16 @@ def crater_properties(mesh, bounds):
         x0, y0 = radius_x, radius_y
         length = int(np.round(np.hypot(x1-x0, y1-y0)))
         x, y = np.linspace(x0, x1, length), np.linspace(y0, y1, length)
-        mask = np.sqrt((x-radius_x)**2 + (y-radius_y) **
-                    2) >= (0.5*(radius_x+radius_y)/2)
-        x, y = x[mask], y[mask]
+        # mask = np.sqrt((x-radius_x)**2 + (y-radius_y) **
+        #             2) >= (0.5*(radius_x+radius_y)/2)
+        # x, y = x[mask], y[mask]
 
         # Extract the values along the line
         x = np.round(x).astype(int)
         y = np.round(y).astype(int)
-        z_line = double_gradient_norm[x, y]
+        z_line = LoG[x, y]
 
-        index = np.argmax(z_line)
+        index = np.argmin(z_line)
         pair = np.array([y[index], x[index]])
         ridge_indices.append(pair)
         height_line = z_locations[x, y]
@@ -393,8 +410,8 @@ def crater_properties(mesh, bounds):
     x, y, ridge_indices, ridge_z = help.remove_outliers(x,y, ridge_indices, ridge_z)
     x, y = np.array(x), np.array(y)
 
-    plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'kx')
     plt.title('Ridge Detection')
+    plt.plot(ridge_indices[:, 0], ridge_indices[:, 1], 'kx')
     plt.savefig("Ridge_Detection.svg")
     plt.close()
 
