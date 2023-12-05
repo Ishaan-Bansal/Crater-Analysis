@@ -44,6 +44,7 @@ function plotCrossSections(folder_index, legend_labels, legend_title, tit)
     end
     
     cd(dir_name);
+    cd 'November 2023'\;
     leg = legend(legend_labels, 'Interpreter', 'none');
     title(leg, legend_title)
 
@@ -57,4 +58,5 @@ function plotCrossSections(folder_index, legend_labels, legend_title, tit)
     set(gca, 'fontname', 'times')
     saveas(gcf, [tit + '.svg']);
     saveas(gcf, [tit + '.fig']);
+    cd ..;
 end

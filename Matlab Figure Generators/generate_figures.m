@@ -2,6 +2,7 @@ data = readtable("CSV Files/November 2023 III.csv");
 % disp(data);
 
 savefolder = "November 2023/";
+cd(savefolder);
 
 % --------- Control Variables: Chamber Pressure, Nozzle Height ------------
 
@@ -53,8 +54,8 @@ for i = 1:numel(chamberPressureValues)
         height = 1.1*max(currentTable.Depth_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, [savefolder 'Flow Rate (gs) vs Depth; Control Variables - ' titleText '.fig']);
-        saveas(gcf, [savefolder 'Flow Rate (gs) vs Depth; Control Variables - ' titleText '.svg']);
+        saveas(gcf, ['Flow Rate (gs) vs Depth; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Flow Rate (gs) vs Depth; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Diameter
         figure;
@@ -73,8 +74,8 @@ for i = 1:numel(chamberPressureValues)
         height = 1.1*max(currentTable.Diameter_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, [savefolder 'Flow Rate (g_s) vs Diameter; Control Variables - ' titleText '.fig']);
-        saveas(gcf, [savefolder 'Flow Rate (g_s) vs Diameter; Control Variables - ' titleText '.svg']);
+        saveas(gcf, ['Flow Rate (g_s) vs Diameter; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Flow Rate (g_s) vs Diameter; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Volume
         figure;
@@ -93,8 +94,8 @@ for i = 1:numel(chamberPressureValues)
         height = 1.1*max(currentTable.Volume_mm_3_);
         axis([0 width 0 height]);
 
-        saveas(gcf, [savefolder 'Flow Rate (g_s) vs Volume; Control Variables - ' titleText '.fig']);
-        saveas(gcf, [savefolder 'Flow Rate (g_s) vs Volume; Control Variables - ' titleText '.svg']);
+        saveas(gcf, ['Flow Rate (g_s) vs Volume; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Flow Rate (g_s) vs Volume; Control Variables - ' titleText '.svg']);
 
         % Create a new figure for Ridge Height
         figure;
@@ -114,8 +115,8 @@ for i = 1:numel(chamberPressureValues)
         height_min = 0.9*min(currentTable.RidgeHeight_mm_);
         axis([0 width height_min height_max]);
 
-        saveas(gcf, [savefolder 'Flow Rate (g_s) vs Ridge Height; Control Variables - ' titleText '.fig']);
-        saveas(gcf, [savefolder 'Flow Rate (g_s) vs Ridge Height; Control Variables - ' titleText '.svg']);
+        saveas(gcf, ['Flow Rate (g_s) vs Ridge Height; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Flow Rate (g_s) vs Ridge Height; Control Variables - ' titleText '.svg']);
         
     end
 end
@@ -170,8 +171,8 @@ for i = 1:numel(chamberPressureValues)
         height = 1.1*max(currentTable.Depth_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, [savefolder 'Nozzle Height (hD) vs Depth; Control Variables - ' titleText '.fig']);
-        saveas(gcf, [savefolder 'Nozzle Height (hD) vs Depth; Control Variables - ' titleText '.svg']);
+        saveas(gcf, ['Nozzle Height (hD) vs Depth; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Nozzle Height (hD) vs Depth; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Diameter
         figure;
@@ -190,8 +191,8 @@ for i = 1:numel(chamberPressureValues)
         height = 1.1*max(currentTable.Diameter_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, [savefolder 'Nozzle Height (hD) vs Diameter; Control Variables - ' titleText '.fig']);
-        saveas(gcf, [savefolder 'Nozzle Height (hD) vs Diameter; Control Variables - ' titleText '.svg']);
+        saveas(gcf, ['Nozzle Height (hD) vs Diameter; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Nozzle Height (hD) vs Diameter; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Volume
         figure;
@@ -210,8 +211,8 @@ for i = 1:numel(chamberPressureValues)
         height = 1.1*max(currentTable.Volume_mm_3_);
         axis([0 width 0 height]);
 
-        saveas(gcf, [savefolder 'Nozzle Height (hD) vs Volume; Control Variables  - ' titleText '.fig']);
-        saveas(gcf, [savefolder 'Nozzle Height (hD) vs Volume; Control Variables  - ' titleText '.svg']);
+        saveas(gcf, ['Nozzle Height (hD) vs Volume; Control Variables  - ' titleText '.fig']);
+        saveas(gcf, ['Nozzle Height (hD) vs Volume; Control Variables  - ' titleText '.svg']);
 
          % Create a new figure for Ridge Height
         figure;
@@ -231,8 +232,8 @@ for i = 1:numel(chamberPressureValues)
         height_min = 0.9*min(currentTable.RidgeHeight_mm_);
         axis([0 width height_min height_max]);
 
-        saveas(gcf, [savefolder 'Nozzle Height (hD) vs Ridge Height; Control Variables - ' titleText '.fig']);
-        saveas(gcf, [savefolder 'Nozzle Height (hD) vs Ridge Height; Control Variables - ' titleText '.svg']);
+        saveas(gcf, ['Nozzle Height (hD) vs Ridge Height; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Nozzle Height (hD) vs Ridge Height; Control Variables - ' titleText '.svg']);
     end
 end
 
@@ -286,8 +287,8 @@ for i = 1:numel(nozzleHeightValues)
         height = 1.1*max(currentTable.Depth_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, [savefolder 'Chamber Pressure (Torr) vs Depth; Control Variables - ' titleText '.fig']);
-        saveas(gcf, [savefolder 'Chamber Pressure (Torr) vs Depth; Control Variables - ' titleText '.svg']);
+        saveas(gcf, ['Chamber Pressure (Torr) vs Depth; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Chamber Pressure (Torr) vs Depth; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Diameter
         figure;
@@ -306,8 +307,8 @@ for i = 1:numel(nozzleHeightValues)
         height = 1.1*max(currentTable.Diameter_mm_);
         axis([0 width 0 height]);
 
-        saveas(gcf, [savefolder 'Chamber Pressure (Torr) vs Diameter; Control Variables - ' titleText '.fig']);
-        saveas(gcf, [savefolder 'Chamber Pressure (Torr) vs Diameter; Control Variables - ' titleText '.svg']);
+        saveas(gcf, ['Chamber Pressure (Torr) vs Diameter; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Chamber Pressure (Torr) vs Diameter; Control Variables - ' titleText '.svg']);
         
         % Create a new figure for Volume
         figure;
@@ -326,8 +327,8 @@ for i = 1:numel(nozzleHeightValues)
         height = 1.1*max(currentTable.Volume_mm_3_);
         axis([0 width 0 height]);
 
-        saveas(gcf, [savefolder 'Chamber Pressure (Torr) vs Volume; Control Variables - ' titleText '.fig']);
-        saveas(gcf, [savefolder 'Chamber Pressure (Torr) vs Volume; Control Variables - ' titleText '.svg']);
+        saveas(gcf, ['Chamber Pressure (Torr) vs Volume; Control Variables - ' titleText '.fig']);
+        saveas(gcf, ['Chamber Pressure (Torr) vs Volume; Control Variables - ' titleText '.svg']);
 
         % Create a new figure for Ridge Height
         figure;
@@ -347,8 +348,8 @@ for i = 1:numel(nozzleHeightValues)
         height_min = 0.9*min(currentTable.RidgeHeight_mm_);
         axis([0 width height_min height_max]);
 
-        saveas(gcf, [savefolder 'Chamber Pressure (Torr) vs Ridge Height; Control Variables - ' titleText '.fig']);        
-        saveas(gcf, [savefolder 'Chamber Pressure (Torr) vs Ridge Height; Control Variables - ' titleText '.svg']);
+        saveas(gcf, ['Chamber Pressure (Torr) vs Ridge Height; Control Variables - ' titleText '.fig']);        
+        saveas(gcf, ['Chamber Pressure (Torr) vs Ridge Height; Control Variables - ' titleText '.svg']);
     end
 end
 
@@ -398,8 +399,8 @@ end
 %                 ylabel('Probability Density');
 %                 
 %                 % Save the figure as .fig file with the specified naming convention
-%                 saveas(gcf, [savefolder 'Depth_NormalDistribution; Control Variables - ' titleText '.fig']);
-%                 saveas(gcf, [savefolder 'Depth_NormalDistribution; Control Variables - ' titleText '.svg']);
+%                 saveas(gcf, ['Depth_NormalDistribution; Control Variables - ' titleText '.fig']);
+%                 saveas(gcf, ['Depth_NormalDistribution; Control Variables - ' titleText '.svg']);
 %     
 %                 % Create a new figure for Diameter
 %                 figure;
@@ -420,8 +421,8 @@ end
 %                 ylabel('Probability Density');
 %                 
 %                 % Save the figure as .fig file with the specified naming convention
-%                 saveas(gcf, [savefolder 'Diameter_NormalDistribution; Control Variables - ' titleText '.fig']);
-%                 saveas(gcf, [savefolder 'Diameter_NormalDistribution; Control Variables - ' titleText '.svg']);
+%                 saveas(gcf, ['Diameter_NormalDistribution; Control Variables - ' titleText '.fig']);
+%                 saveas(gcf, ['Diameter_NormalDistribution; Control Variables - ' titleText '.svg']);
 %     
 %                 % Create a new figure for Volume
 %                 figure;
@@ -442,10 +443,12 @@ end
 %                 ylabel('Probability Density');
 %                 
 %                 % Save the figure as .fig file with the specified naming convention
-%                 saveas(gcf, [savefolder 'Volume_NormalDistribution; Control Variables - ' titleText '.fig']);
-%                 saveas(gcf, [savefolder 'Volume_NormalDistribution; Control Variables - ' titleText '.svg']);
+%                 saveas(gcf, ['Volume_NormalDistribution; Control Variables - ' titleText '.fig']);
+%                 saveas(gcf, ['Volume_NormalDistribution; Control Variables - ' titleText '.svg']);
 %             end
 %         end
 %     end
 % end
 % 
+
+cd ..;
